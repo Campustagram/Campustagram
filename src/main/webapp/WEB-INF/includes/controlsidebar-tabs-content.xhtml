@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="tab-content">
+		<div id="control-sidebar-theme-demo-options-tab"
+			class="tab-pane active">
+			<ui:remove>
+				<div id="restore-defaults" style="font-size: 11px;"
+					class="align-right">
+					<a href="#"> <i class="fa fa-recycle" aria-hidden="true"></i> <span><p:outputLabel
+								value="restore-defaults" /></span>
+					</a>
+					<p:remoteCommand name="loadLayoutDefaults" process="@this"
+						update="@none" global="false" oncomplete="resetDefaultTemplate()" />
+					<p:remoteCommand name="resetDefaultTemplate" process="@this"
+						update="@none" global="false"
+						oncomplete="window.location.reload()" />
+				</div>
+			</ui:remove>
+			<div>
+				<h4 class="control-sidebar-heading">#{word['language']}</h4>
+				<h:form id="languageForm">
+					<p:selectOneMenu styleClass="white-selectmenu" widgetVar="ds"
+						style="min-width:50px; background: #fff;" id="languagex"
+						value="#{localeController.selectedTmpLanguage}">
+						<p:ajax oncomplete="window.location.reload()" event="change"
+							process=":languageForm"
+							listener="#{localeController.setLocale(localeController.selectedTmpLanguage)}" />
+						<f:selectItems value="#{server.languages}" var="language"
+							itemLabel="#{word[language.code]}" itemValue="#{language.code}" />
+					</p:selectOneMenu>
+				</h:form>
+				<sec:authorize access="hasAuthority('ROLE_SYSTEM_MANAGEMENT-PERMISSION_VIEW')">
+					<h:panelGroup>
+						<h4 class="control-sidebar-heading">#{word['configuration']}</h4>
+						<div class="form-group">
+							<h:form>
+								<span class="control-sidebar-subheading"> <p:outputLabel
+										id="toggle-menu-layout-label" value="#{word['verticalmenu']}"
+										for="toggle-menu-layout" /> <p:selectBooleanCheckbox
+										value="#{coreConfig.verticalTopMenu}" id="toggle-menu-layout"
+										styleClass="pull-right black" widgetVar="toggleLayout">
+										<p:ajax event="change" process="@this"
+											oncomplete="window.location.reload()" />
+									</p:selectBooleanCheckbox>
+								</span>
+							</h:form>
+							<p>
+								<h:outputText escape="false" value="#{word['menuStatus']}" />
+							</p>
+						</div>
+					</h:panelGroup>
+				</sec:authorize>
+				
+			</div>
+		</div>
+		<ui:remove>
+			<div class="tab-pane" id="control-sidebar-home-tab">
+				<h3 class="control-sidebar-heading">Recent Activity</h3>
+				<ul class="control-sidebar-menu">
+					<li><a href="javascript:void(0)"> <i
+							class="menu-icon fa fa-birthday-cake bg-red" aria-hidden="true"></i>
+
+							<div class="menu-info">
+								<h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+
+								<p>Will be 23 on April 24th</p>
+							</div>
+					</a></li>
+					<li><a href="javascript:void(0)"> <i
+							class="menu-icon fa fa-user bg-yellow" aria-hidden="true"></i>
+
+							<div class="menu-info">
+								<h4 class="control-sidebar-subheading">Frodo Updated His
+									Profile</h4>
+
+								<p>New phone +1(800)555-1234</p>
+							</div>
+					</a></li>
+				</ul>
+
+				<h3 class="control-sidebar-heading">Tasks Progress</h3>
+				<ul class="control-sidebar-menu">
+					<li><a href="javascript:void(0)">
+							<h4 class="control-sidebar-subheading">
+								Custom Template Design <span
+									class="label label-danger pull-right">70%</span>
+							</h4>
+
+							<div class="progress progress-xxs">
+								<div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+							</div>
+					</a></li>
+					<li><a href="javascript:void(0)">
+							<h4 class="control-sidebar-subheading">
+								Update Resume <span class="label label-success pull-right">95%</span>
+							</h4>
+
+							<div class="progress progress-xxs">
+								<div class="progress-bar progress-bar-success"
+									style="width: 95%"></div>
+							</div>
+					</a></li>
+					<li><a href="javascript:void(0)">
+							<h4 class="control-sidebar-subheading">
+								Laravel Integration <span class="label label-warning pull-right">50%</span>
+							</h4>
+
+							<div class="progress progress-xxs">
+								<div class="progress-bar progress-bar-warning"
+									style="width: 50%"></div>
+							</div>
+					</a></li>
+					<li><a href="javascript:void(0)">
+							<h4 class="control-sidebar-subheading">
+								Back End Framework <span class="label label-primary pull-right">68%</span>
+							</h4>
+
+							<div class="progress progress-xxs">
+								<div class="progress-bar progress-bar-primary"
+									style="width: 68%"></div>
+							</div>
+					</a></li>
+				</ul>
+			</div>
+
+			<div class="tab-pane" id="control-sidebar-settings-tab">
+				<form method="post">
+					<h3 class="control-sidebar-heading">General Settings</h3>
+
+					<div class="form-group">
+						<sec:authorize access="hasAuthority('ROLE_SYSTEM_MANAGEMENT-PERMISSION_EDIT')">
+							<h:panelGroup>
+								<p:commandButton value="Refresh View" icon="pi pi-save"									
+									style="width: 100%;">
+									<p:confirm header="#{word['confirmation']}"
+										message="#{word['areYouSureRefreshView']}" icon="ui-icon-alert" />
+								</p:commandButton>
+							</h:panelGroup>
+						</sec:authorize>
+					</div>
+				</form>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+					responsive="true">
+					<p:commandButton value="#{word['yes']}" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="#{word['no']}" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</div>
+		</ui:remove>
+	</div>
+</ui:composition>

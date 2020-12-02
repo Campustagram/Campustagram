@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{dbTuplesController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+
+	<ui:define name="page-title">
+		#{word['dbDeadTuplesChecker']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['dbDeadTuplesChecker']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<p:messages id="messages" showDetail="false" closable="true" />
+
+			<div id="datatable-single">
+				<p:outputPanel deferred="true" deferredMode="visible">
+					<p:dataTable id="dbSizeTable" reflow="true" widgetVar="dbSizeTable"
+						emptyMessage="#{word['noRecordsFound']}" var="dbSize"
+						paginator="true" rows="20" rowsPerPageTemplate="5,10,20,100"
+						value="#{dbTuplesController.dbTableNameAndDeadTuples}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowKey="#{errorLog.id}" tableStyle="table-layout: auto;">
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-3 ui-lg-3">
+									<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+										<h:commandLink>
+											<p:graphicImage library="core" name="img/icon/excell.png"
+												width="30" />
+											<p:dataExporter type="xls" target="errorLogTable"
+												encoding="CP1254" fileName="errorLogTable" />
+										</h:commandLink>
+
+										<h:commandLink>
+											<p:graphicImage library="core" name="img/icon/pdf.png"
+												width="30" />
+											<p:dataExporter type="pdf" target="errorLogTable"
+												encoding="CP1254" fileName="errorLogTable" />
+										</h:commandLink>
+
+										<h:commandLink>
+											<p:graphicImage library="core" name="img/icon/csv.png"
+												width="30" />
+											<p:dataExporter type="csv" target="errorLogTable"
+												encoding="CP1254" fileName="errorLogTable" />
+										</h:commandLink>
+
+										<h:commandLink>
+											<p:graphicImage library="core" name="img/icon/xml.png"
+												width="30" />
+											<p:dataExporter type="xml" target="errorLogTable"
+												encoding="CP1254" fileName="errorLogTable" />
+										</h:commandLink>
+									</h:panelGroup>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<h:outputText value="#{word['dbTuplesList']}"
+										style="font-size: 18px; font-weight: bold;" />
+									( #{word['inTotal']}
+									#{dbTuplesController.dbTableNameAndDeadTuples.size()}
+									#{word['dbTables']})
+								</div>
+								<div class="ui-g-12 ui-md-3 ui-lg-3">
+									<p:outputPanel>
+										<p:inputText id="globalFilter"
+											onkeypress="if (event.keyCode == 13) { return false; }"
+											value="#{dbTuplesController.searchKeyword}"
+											onkeyup="PF('dbSizeTable').filter()" style="width:150px"
+											placeholder="#{word['search']}" />
+									</p:outputPanel>
+								</div>
+							</div>
+						</f:facet>
+						<p:column headerText="#{word['tableName']}"
+							filterBy="#{dbSize[0]}" filterable="false" sortBy="#{dbSize[0]}"
+							filterMatchMode="contains">
+							<h:outputText value="#{dbSize[0]}" />
+						</p:column>
+						<p:column headerText="#{word['liveTuples']}"
+							filterBy="#{dbSize[1]}" filterable="false" sortBy="#{dbSize[1]}"
+							filterMatchMode="contains">
+							<h:outputText value="#{dbSize[1]}" />
+						</p:column>
+						<p:column headerText="#{word['deadTuples']}"
+							filterBy="#{dbSize[2]}" filterable="false"
+							filterMatchMode="contains">
+							<h:outputText value="#{dbSize[2]}" />
+						</p:column>
+					</p:dataTable>
+				</p:outputPanel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/error_template.xhtml">
+
+	<ui:define name="metadata">
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{permissionController.startUpChecks()}" onPostBack="true" />
+	</ui:define>
+
+	<ui:define name="page-title">
+		403
+	</ui:define>
+
+	<ui:define name="before-head">
+		<style type="text/css">
+.section-title {
+	font-weight: 900 !important;
+	font-size: 180px !important;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="site-title">
+#{coreConfig.SYSTEM_NAME}
+	</ui:define>
+
+	<ui:define name="message">
+#{word['403_messages']}
+	</ui:define>
+
+	<ui:define name="message-big">
+403
+	</ui:define>
+
+	<ui:define name="time-countdown">
+
+	</ui:define>
+
+	<ui:define name="home-button">
+		<a href="#{navigationUtils.buildHrefString('/')}"> <span>#{word['goDashboard']}</span></a>
+	</ui:define>
+
+	<ui:define name="body-end">
+
+	</ui:define>
+
+</ui:composition>

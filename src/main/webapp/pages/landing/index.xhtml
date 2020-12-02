@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/landing_template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['dashboard']}
+	</ui:define>
+
+	<ui:define name="top-menu">
+		<ui:include src="/pages/landing/commonInclude/topmenu.xhtml" />
+	</ui:define>
+
+	<ui:define name="body">
+		<ui:include src="/pages/landing/indexParts/header.xhtml" />
+		<ui:include src="/pages/landing/indexParts/services.xhtml" />
+		<ui:include src="/pages/landing/indexParts/portfolio.xhtml" />
+		<ui:include src="/pages/landing/indexParts/price.xhtml" />
+		<ui:include src="/pages/landing/indexParts/about.xhtml" />
+		<ui:include src="/pages/landing/indexParts/team.xhtml" />
+		<ui:include src="/pages/landing/indexParts/clients.xhtml" />
+		<ui:include src="/pages/landing/indexParts/contact.xhtml" />
+	</ui:define>
+
+	<ui:define name="footer">
+		<ui:include src="/pages/landing/commonInclude/footer.xhtml" />
+	</ui:define>
+
+</ui:composition>

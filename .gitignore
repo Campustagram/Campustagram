@@ -1,0 +1,9 @@
+.idea/
+*.iml
+data/
+/target/
+/src/main/webapp/WEB-INF/classes/*
+/doc/
+/.sass-cache/
+/logs/
+/node_modules/

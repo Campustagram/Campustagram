@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template/#{coreConfig.getAdminTemplate()}">
+
+	<ui:define name="page-enty-check">
+		<script type="text/javascript">
+   $(document).ready(function() { pageEntryJS();  });
+</script>
+		<p:remoteCommand name="pageEntryJS"
+			actionListener="#{server.pageEntryJSWorks()}" />
+	</ui:define>
+	<ui:define name="page-exit-check">
+		<script type="text/javascript">
+		window.onbeforeunload = function (e) {
+			pageExitJS();
+			};	  
+</script>
+		<p:remoteCommand name="pageExitJS"
+			actionListener="#{server.pageExitJSWorks()}" />
+	</ui:define>
+
+
+	<ui:define name="maintenance">
+		<h2 class="align-center">
+			<small> <h:panelGroup id="maintenancePanel">
+					<h:panelGroup rendered="#{server.systemProperties.onMaintenance}">
+						<h:panelGroup
+							rendered="#{!server.systemProperties.isEndDateActive()}">
+							<span id="maintenanceStatus" class="maintenanceText">#{word['weWillInMaintenance']}:
+							</span>
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{server.systemProperties.isEndDateActive()}">
+							<span id="maintenanceStatus" class="maintenanceText">#{word['weAreinMaintenance']}:
+							</span>
+						</h:panelGroup>
+						<span id="countDown" class="time-count-container"></span>
+					</h:panelGroup>
+				</h:panelGroup></small>
+		</h2>
+		<h:panelGroup
+			rendered="#{server.systemProperties.onMaintenance == true}">
+			<script type="text/javascript">
+		<!--//--><![CDATA[//><!--
+// Set the date we're counting down to
+var countDownDate = ${server.systemProperties.getMaintenanceDate().getTime()};
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get todays date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="demo"
+  document.getElementById("countDown").innerHTML = days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+
+  if(Math.floor(#{server.systemProperties.maintenanceStartDate.getTime()} /1000) == Math.floor(now/1000)){
+		 location.reload();
+		}	
+		 if(Math.floor(#{server.systemProperties.maintenanceEndDate.getTime()} /1000)	 == Math.floor(now/1000)){
+		  location.reload();
+		}		
+															
+		 // If the count down is finished, write some text 
+		if (distance < 0) {
+			clearInterval(x);
+			if( (#{server.systemProperties.maintenanceEndDate.getTime()}) < now ){
+		   		document.getElementById("countDown").innerHTML = " #{word['expiredMessage']}";
+		   		document.getElementById("maintenanceStatus").innerHTML = "#{word['expired']}";
+			}
+			else{
+		   		document.getElementById("countDown").innerHTML = " #{word['whiteSpaceChar']}";
+		   		document.getElementById("maintenanceStatus").innerHTML = "#{word['whiteSpaceChar']}";
+			}	}
+		}, 1000);
+//--><!]]>
+		</script>
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="loading-dialog">
+		<ui:remove>
+			<p:ajaxStatus onstart="showBar();" onsuccess="hideBar();" />
+
+			<p:dialog id="adminStatusDialog" modal="true"
+				widgetVar="statusDialog" draggable="false" closable="false"
+				resizable="false" responsive="true" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage library="core" name="#{coreConfig.logadingImage}"
+					width="35" height="35" />
+			</p:dialog>
+		</ui:remove>
+	</ui:define>
+
+	<ui:define name="page-start">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes" />
+
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon.ico']}" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-16x16.png']}"
+			sizes="16x16" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-32x32.png']}"
+			sizes="32x32" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-96x96.png']}"
+			sizes="96x96" />
+
+		<meta name="theme-color" content="#444" />
+		<meta name="mobile-web-app-capable" content="yes" />
+
+		<h:outputStylesheet library="core" name="css/style.min.css" />
+		<h:outputStylesheet library="core" name="css/apexcharts.min.css" />
+		<h:outputStylesheet library="core" name="css/tooltipster.min.css" />
+		<h:outputStylesheet library="core" name="css/admin.min.css" />
+
+
+		<script type="">
+			$('link[href="/Campustagram/javax.faces.resource/theme.css.jsf?ln=primefaces-aristo"]').remove();
+			$('link[href="/javax.faces.resource/theme.css.jsf?ln=primefaces-aristo"]').remove();
+	</script>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+
+	</ui:define>
+
+	<ui:define name="page-end">
+		<a href="javascript:" id="return-to-top"> <i
+			class="fas fa-arrow-up" aria-hidden="true"></i>
+		</a>
+
+
+		<script type="text/javascript">
+            if (isMobile()) {
+                window.onscroll = activateScrollToTop
+            }
+        </script>
+		<h:outputScript library="core" name="js/bootstrap.min.js" target="head" />
+		<h:outputScript library="core" name="js/main.min.js" target="head" />
+
+
+		<ui:fragment
+			rendered="#{adminConfig.autoShowNavbar and (empty autoShowNavbar or autoShowNavbar)}">
+			<script type="text/javascript">
+                $(window).scroll(function () {
+                    if (isMobile()) {
+                        var minScrollTimeNav = 300;
+                        var now = new Date().getTime();
+                        if (!scrollTimerNav) {
+                            if (now - lastScrollFireTimeNav > (3 * minScrollTimeNav)) {
+                                activateAutoShowNavbarOnScrollUp();   // fire immediately on first scroll
+                                lastScrollFireTimeNav = now;
+                            }
+                            scrollTimerNav = setTimeout(function () {
+                                scrollTimerNav = null;
+                                lastScrollFireTimeNav = new Date().getTime();
+                                activateAutoShowNavbarOnScrollUp();
+                            }, minScrollTimeNav);
+                        }
+                    }
+                });
+            </script>
+		</ui:fragment>
+
+		<ui:fragment>
+			<script type="text/javascript">
+                //<![CDATA[
+                /* hide info messages */
+                $(document).on("pfAjaxComplete", function () {
+                    var $messages = $("div[id$='info-messages']");
+                    if ($messages.length) {
+                        var wordCount = $messages.text().split(/\W/).length;
+                        var readingTimeMillis =5000 + (wordCount * 200);
+
+                        setTimeout(function () {
+                            $messages.slideUp();
+                        }, readingTimeMillis);
+                    }
+                });
+
+                $(document).ready(function () {
+                    var $messages = $("div[id$='info-messages']");
+                    if ($messages.length) {
+                        var wordCount = $messages.text().split(/\W/).length;
+                        var readingTimeMillis = 5000 + (wordCount * 200);
+
+                        setTimeout(function () {
+                            $messages.slideUp();
+                        }, readingTimeMillis);
+                    }
+                });
+                //]]>
+            </script>
+		</ui:fragment>
+
+		<ui:fragment>
+			<script type="text/javascript">
+                $(document).ready(function () {
+                	activateRippleIcons();
+                });                
+                $(document).on("pfAjaxComplete", function () {
+				    activateRippleIcons();
+                });
+            </script>
+		</ui:fragment>
+
+		<ui:fragment>
+			<script type="text/javascript">
+	            window.onpageshow = function (event) {
+	    			console.log("on page show");
+	    	        if (event.persisted) {
+	    	        	console.log("before reload");
+	    	            //window.location.reload();
+	    	            decideReload();
+	    	            console.log("reloaded");
+	    	        } else {
+	    	        	console.log("not persisted");
+	    	        	//decideReload();
+	        	    }
+	    	    }; 
+			</script>
+
+			<h:form>
+				<p:remoteCommand name="decideReload"
+					action="#{loginController.decideReload}" />
+			</h:form>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{not empty skin}">
+			<script type="text/javascript">
+                $(document).ready(function () {
+                    store('layout.skin', null);
+                });
+            </script>
+		</ui:fragment>
+	</ui:define>
+
+	<ui:define name="scrollTop">
+		<div id="scrollTop" class="ripplelink scroll-top"
+			onclick="window.scrollTo(0, 0)">
+			<i class="fa fa-chevron-up" aria-hidden="true"></i>
+		</div>
+	</ui:define>
+
+	<ui:define name="loader">
+		<div id="loader" class="load-bar" style="display: none">
+			<div class="bar"></div>
+			<div class="bar"></div>
+			<div class="bar"></div>
+		</div>
+	</ui:define>
+
+	<ui:define name="head">
+	</ui:define>
+
+	<ui:define name="logo">
+        Campustagram
+    </ui:define>
+
+	<ui:define name="logo-mini">
+		<h:panelGroup rendered="#{coreConfig.verticalTopMenu}">
+			<p:graphicImage library="core" name="img/icon/as.png" width="40"
+				style="" />
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/WEB-INF/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="top-menu">
+		<ui:include src="/WEB-INF/includes/top-bar.xhtml" />
+
+		<script>
+			goDashboard = function() {
+				var hostStr = window.location.host;
+				var pathStr = window.location.pathname;
+				var pathParts = pathStr.split("/");
+		
+				console.log("http://" + hostStr + "/dashboard" + pathParts[1]);
+				window.location.href = "http://" + hostStr + "/" + pathParts[1] + "/dashboard"; 
+			}	
+		</script>
+
+		<p:dialog id="redirectionDialog" header="#{word['accessRestriction']}"
+			widgetVar="timeRunDialog" modal="true" appendTo="@(body)"
+			resizable="false" closable="false" draggable="false"
+			responsive="true" onShow="PF('redirectTimer').start();" height="400"
+			width="400">
+			<h:form>
+
+				<p:outputPanel>
+					<i class="fas fa-exclamation-triangle"></i>
+
+					<h:outputText value="You will be redirected to dashboard in: " />
+
+					<pe:timer widgetVar="redirectTimer" timeout="5" singleRun="true"
+						autoStart="false" ontimercomplete="goDashboard(); return false;" />
+				</p:outputPanel>
+
+			</h:form>
+
+		</p:dialog>
+	</ui:define>
+
+	<ui:define name="controlsidebar-tabs">
+		<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+			<li class="active"><a
+				href="#control-sidebar-theme-demo-options-tab" data-toggle="tab">
+					<i class="fa fa-wrench" aria-hidden="true"></i>
+			</a></li>
+			<ui:remove>
+				<li><a href="#control-sidebar-home-tab" data-toggle="tab"><i
+						class="fa fa-home" aria-hidden="true"></i></a></li>
+				<li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i
+						class="fas fa-cogs" aria-hidden="true"></i></a></li>
+			</ui:remove>
+		</ul>
+	</ui:define>
+
+	<ui:define name="controlsidebar-content">
+		<ui:include src="/WEB-INF/includes/controlsidebar-tabs-content.xhtml" />
+	</ui:define>
+
+	<ui:define name="controlsidebar-script">
+		<script type="text/javascript">
+                            /*<![CDATA[*/
+                            function replaceSkinWith(newSkin) {
+                                $('.skin-link').each(function () {
+                                    $(this).addClass('full-opacity-hover');
+                                });
+                                $('#btn-' + newSkin).removeClass('full-opacity-hover');
+                                var cl = $('body').attr("class").split(" ");
+                                for (var i = 0; i < cl.length; i++) {
+                                    if (cl[i].startsWith('skin-')) {
+                                        $('body').removeClass(cl[i])
+                                    }
+                                }
+                                $('body').addClass(newSkin);
+                                if (typeof (Storage) !== 'undefined') {
+                                    localStorage.setItem('layout.skin', newSkin)
+                                }
+                            }
+                            /* ]]>*/
+                        </script>
+	</ui:define>
+
+	<ui:define name="footer">
+		<footer class="main-footer">
+			<a target="_blank" href="#"> Campustagram - © 2020 </a>
+			<div class="pull-right hidden-xs" style="color: gray">
+
+				<i aria-hidden="true"> <h:form prependId="false">
+						<span style="padding: 0 15px;">#{word['projectVersion']}:
+							#{server.applicationVersion}</span>
+					</h:form></i>
+			</div>
+			<script type="text/javascript">
+            if(isMobile()) {
+                $('a.ui-link').click(function() {
+                    $(this).prop('disabled', true);
+                    showBar();
+                });
+            }
+        </script>
+
+		<script type="text/javascript">
+                            /*<![CDATA[*/
+            window.addEventListener(
+			  "load",
+			  function() {
+			    var allimages = document.getElementsByTagName("img");
+			    for (var i = 0; i < allimages.length; i++) {
+			      if (allimages[i].getAttribute("data-original")) {
+			        allimages[i].setAttribute(
+			          "src",
+			          allimages[i].getAttribute("data-original")
+			        );
+			      }
+			    }
+			  },
+			  false
+			);
+                            /* ]]>*/
+       </script>
+
+<h:outputScript library="core"
+				name="3rdParty/tooltipster/js/tooltipster.bundle.min.js"
+				target="head" />
+			<h:outputScript library="core" name="js/apexcharts.min.js"
+				target="head" />
+		</footer>
+	</ui:define>
+</ui:composition>

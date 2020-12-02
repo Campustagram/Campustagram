@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>	
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{logPageVisitController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['listOfLogsVisit']}</li>
+	</ui:define>
+
+	<ui:define name="page-title">
+		#{word['listOfLogsVisit']}
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<p:remoteCommand name="myRemote"
+				actionListener="#{logPageVisitController.unloadPage()}" />
+			<p:growl id="message" showDetail="true" />
+			<p:poll interval="#{logPageVisitController.refreshRate}"
+				update=":main" listener="#{logPageVisitController.loadData()}" />
+			<div style="float: right; margin-bottom: 10px;">
+				<p:commandButton process="@this"
+					actionListener="#{logPageVisitController.refreshSelection('refresh')}"
+					update=":main" icon="ui-icon-refresh" title="#{word['refresh']}"
+					style="border-radius: 0;" />
+				<p:commandButton process="@this"
+					actionListener="#{logPageVisitController.refreshSelection('1s')}"
+					value="1s" update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logPageVisitController.refreshSelection('5s')}"
+					value="5s" update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logPageVisitController.refreshSelection('10s')}"
+					value="10s" update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logPageVisitController.refreshSelection('15s')}"
+					value="15s" update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logPageVisitController.refreshSelection('manuel')}"
+					value="#{word['manuel']}" update=":main"
+					styleClass="ui-priority-primary" />
+			</div>
+			<div style="clear: both;"></div>
+			<div id="datatable-single">
+				<p:dataTable id="pageVisitLogTable" reflow="true"
+					emptyMessage="#{word['noRecordsFound']}"
+					widgetVar="pageVisitLogTable" var="logPageVisit" paginator="true"
+					rows="10" rowsPerPageTemplate="5,10,15,100"
+					value="#{logPageVisitController.logPageVisitList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{logPageVisit.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="pageVisitLogTable"
+											encoding="CP1254" fileName="pageVisitLogTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="pageVisitLogTable"
+											encoding="CP1254" fileName="pageVisitLogTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="pageVisitLogTable"
+											encoding="CP1254" fileName="pageVisitLogTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="pageVisitLogTable"
+											encoding="CP1254" fileName="pageVisitLogTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfLogsVisit']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										value="#{logPageVisitController.searchKeyword}"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										onkeyup="PF('pageVisitLogTable').filter()" style="width:150px"
+										placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column headerText="#{word['processDate']}"
+						filterBy="#{commonDate.dateBeautifier(logPageVisit.process_date)}"
+						filterable="false"
+						sortBy="#{commonDate.dateBeautifier(logPageVisit.process_date)}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{commonDate.dateBeautifier(logPageVisit.process_date)}" />
+					</p:column>
+					<p:column headerText="#{word['user']}"
+						filterBy="#{logPageVisit.user.email}" filterable="false"
+						sortBy="#{logPageVisit.user.email}" filterMatchMode="contains">
+						<h:outputText value="#{logPageVisit.user.email}" />
+					</p:column>
+					<p:column headerText="#{word['browserInfo']}"
+						filterBy="#{logPageVisit.browserInfo}" filterable="false"
+						sortBy="#{logPageVisit.browserInfo}" filterMatchMode="contains">
+						<h:outputText value="#{logPageVisit.browserInfo}" />
+					</p:column>
+					<p:column headerText="#{word['logInfo']}"
+						filterBy="#{word[logPageVisit.logInfo]}" filterable="false"
+						sortBy="#{word[logPageVisit.logInfo]}" filterMatchMode="contains">
+						<h:outputText value="#{word[logPageVisit.logInfo]}" />
+					</p:column>
+					<p:column headerText="#{word['ip']}" filterBy="#{logPageVisit.ip}"
+						filterable="false" sortBy="#{logPageVisit.ip}"
+						filterMatchMode="contains">
+						<h:outputText value="#{logPageVisit.ip}" />
+					</p:column>
+					<p:column headerText="#{word['enteredUrl']}"
+						filterBy="#{logPageVisit.enteredURL}" filterable="false"
+						sortBy="#{logPageVisit.enteredURL}" filterMatchMode="contains">
+						<h:outputText value="#{logPageVisit.enteredURL}" />
+					</p:column>
+
+					<f:facet name="footer">
+						       #{word['inTotal']} #{logPageVisitController.logPageVisitList.size()} #{word['logPageVisit']}.
+						    </f:facet>
+				</p:dataTable>
+			</div>
+		</h:form>
+		<script type="text/javascript">
+   window.onbeforeunload = function() {
+	   myRemote(); 
+	 }
+</script>
+	</ui:define>
+</ui:composition>

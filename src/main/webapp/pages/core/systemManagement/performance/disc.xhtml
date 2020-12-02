@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{discController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+
+	<ui:define name="page-title">
+		#{word['discHistoryChart']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['discHistoryChart']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+		<h:outputScript library="core"
+			name="apexcharts-bundle/dist/apexcharts.min.js" target="head" />
+		<h:outputStylesheet library="core"
+			name="apexcharts-bundle/dist/apexcharts.css" />
+		<h:outputScript library="core"
+			name="tooltipster/dist/js/tooltipster.bundle.min.js" target="head" />
+		<h:outputStylesheet library="core"
+			name="tooltipster/dist/css/tooltipster.bundle.min.css" />
+		<h:outputStylesheet library="core"
+			name="tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+
+		<style>
+.ui-inputgroup>.ui-inputnumber>.ui-inputtext {
+	border-right: 1px solid #d2d6de !important;
+}
+
+.tooltip_templates {
+	display: none;
+}
+
+.tooltipster-content {
+	
+}
+
+.apexcharts-canvas>svg {
+	max-height: 97%;
+}
+</style>
+		<script>		
+		 function refreshTooltip(){
+	      
+	            var width = $(window).width();
+	            if( width > 767) {
+	            	$('.customTooltip').tooltipster({
+	           		  theme: 'tooltipster-shadow',
+	           		  side: 'right',
+	           		  contentAsHTML: true,
+	                  interactive: true,
+	                  trigger: 'hover',
+	                  position: 'right',
+	                  minWidth: 700,
+	                });
+	            }
+	            else{
+	            	$('.customTooltip').tooltipster({
+	        		  theme: 'tooltipster-shadow',
+	           		  side: 'right',
+	           		  contentAsHTML: true,
+	                  interactive: true,
+	                  trigger: 'click',
+	                  position: 'top',
+	                  minWidth: 280,
+	                })
+	            }
+	        
+		}
+
+		 $(document).ready(function() {
+	        	refreshTooltip();
+	        }); 
+    </script>
+
+		<p:panel styleClass="card box-info" style="margin-bottom:20px;">
+			<h:form id="main">
+				<p:messages id="messages" showDetail="false" closable="true" />
+
+				<div id="datatable-single">
+					<p:outputPanel deferred="true">
+
+						<div id="chart_disc" class="customChartInner">
+							<div id="timeline-chart_disc" class="customChart"></div>
+						</div>
+
+
+						<script>
+						//<![CDATA[
+    var options_disc = {
+      chart: {
+        height: 400,
+        type: "line",
+        stacked: false
+      },
+      dataLabels: {
+        enabled: false
+      },
+      series: [
+        {
+          name: "#{word['totalSpace']}",
+          type: "line",
+          data: [
+        	  #{discController.prepareGraphWithPart('TotalSpace1')}
+          ],
+        },
+        {
+          name: "#{word['usableSpace']}",
+          type: "line",
+          data: [
+        	  #{discController.prepareGraphWithPart('UsableSpace1')}
+          ],
+        }
+      ],
+      stroke: {
+        width: [2, 2, 2],
+        curve: 'straight',
+        dashArray: [0, 0, 0]
+      },
+      title: {
+        text:
+          "#{word['discHistoryChart']}",
+        align: "left",
+        offsetX: 50
+      },
+      markers: {
+        size: 3,
+        hover: {
+          size: 4
+        }
+      },
+      xaxis: {
+        type: "datetime",
+        min: new Date("01 Mar 2012").getTime(),
+        labels: {
+          show: true,
+          rotate: -45,
+          rotateAlways: false,
+          hideOverlappingLabels: true,
+          showDuplicates: false,
+          trim: true,
+          style: {
+            colors: [],
+            fontSize: "12px",
+            fontFamily: "Helvetica, Arial, sans-serif",
+            cssClass: "apexcharts-xaxis-label"
+          },
+          offsetX: 0,
+          offsetY: 0,
+          format: undefined,
+          formatter: undefined,
+          datetimeFormatter: {
+            year: "yyyy",
+            month: "MM",
+            day: "dd MMM yyyy",
+            hour: "HH:mm"
+          }
+        },
+        axisBorder: {
+          show: true,
+          color: "#78909C",
+          height: 1,
+          width: "100%",
+          offsetX: 0,
+          offsetY: 0
+        },
+        axisTicks: {
+          show: true,
+          borderType: "solid",
+          color: "#78909C",
+          height: 6,
+          offsetX: 0,
+          offsetY: 0
+        },
+        tickAmount: undefined,
+        tickPlacement: "between",
+        min: undefined,
+        max: undefined,
+        range: undefined,
+        floating: false,
+        position: "bottom",
+        title: {
+          text: undefined,
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            color: undefined,
+            fontSize: "12px",
+            fontFamily: "Helvetica, Arial, sans-serif",
+            cssClass: "apexcharts-xaxis-title"
+          }
+        },
+        crosshairs: {
+          show: true,
+          width: 1,
+          position: "back",
+          opacity: 0.9,
+          stroke: {
+            color: "#b6b6b6",
+            width: 0,
+            dashArray: 0
+          },
+          fill: {
+            type: "solid",
+            color: "#B1B9C4",
+            gradient: {
+              colorFrom: "#D8E3F0",
+              colorTo: "#BED1E6",
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5
+            }
+          },
+          dropShadow: {
+            enabled: false,
+            top: 0,
+            left: 0,
+            blur: 1,
+            opacity: 0.4
+          }
+        },
+        tooltip: {
+          enabled: true,
+          formatter: undefined,
+          offsetY: 0,
+          x: {
+            format: "dd MMM yyyy"
+          },
+        }
+      },
+      yaxis: [
+        {
+        	seriesName: "#{word['totalSpace']}",
+          axisTicks: {
+            show: true
+          },
+          axisBorder: {
+            show: true,
+            color: "#008FFB"
+          },
+          labels: {
+            style: {
+              color: "#008FFB"
+            }
+          },
+          title: {
+            text: "#{word['totalSpace']}",
+            style: {
+              color: "#008FFB"
+            }
+          },
+          tooltip: {
+            enabled: true
+          }
+        },
+        {
+        	seriesName: "#{word['usableSpace']}",
+            opposite: true,
+            axisTicks: {
+              show: false
+            },
+            axisBorder: {
+              show: false,
+              color: "#00e396"
+            },
+            labels: {
+              style: {
+                color: "#00e396"
+              }
+            },
+            title: {
+              text: "#{word['usableSpace']}",
+              style: {
+                color: "#00e396"
+              }
+            }
+          }
+      ],
+      tooltip: {
+        y: {
+          format: "dd/mm/yyyy"
+        },
+        fixed: {
+          enabled: false,
+          position: "topRight"
+        }
+      },
+      legend: {
+        horizontalAlign: "left",
+        offsetX: 40
+      }
+    };
+
+
+    var chart_disc = new ApexCharts(
+      document.querySelector("#timeline-chart_disc"),
+      options_disc
+    );
+
+
+    chart_disc.render();
+
+  //]]>
+  </script>
+					</p:outputPanel>
+				</div>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,2 @@
+--ERROR LOGS
+DROP SCHEMA IF EXISTS partition_error_log CASCADE;

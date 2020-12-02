@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['profile']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['profile']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form>
+			<div class="row ">
+				<div class="col-md-3 col-sm-3 col-xs-12"></div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<p:commandLink action="#{profileController.editInformation}">
+						<div class="info-box">
+							<span class="info-box-icon bg-red"><i
+								class="fas fa-user-cog" aria-hidden="true"></i></span>
+							<div class="info-box-content">
+								<span class="info-box-text">#{word['editInformation']}</span> <span
+									class="info-box-number"> </span>
+							</div>
+						</div>
+					</p:commandLink>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<p:commandLink action="#{profileController.security}">
+						<div class="info-box">
+							<span class="info-box-icon bg-red"><i class="fas fa-key"
+								aria-hidden="true"></i></span>
+							<div class="info-box-content">
+								<span class="info-box-text">#{word['changePassword']}</span> <span
+									class="info-box-number"> </span>
+							</div>
+						</div>
+					</p:commandLink>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

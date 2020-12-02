@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<script>
+		logout = function() {
+			var hostStr = window.location.host;
+			var pathStr = window.location.pathname;
+			var pathParts = pathStr.split("/");
+
+			window.location.href = "http://" + hostStr + "/" + pathParts[1] + "/logout"; 
+		}
+	</script>
+	<h:form>
+		<ul class="nav navbar-nav">
+			<li class="dropdown notifications-menu"><a href="#"
+				class="dropdown-toggle notification-icon" data-toggle="dropdown"
+				aria-expanded="true"> <i class="far fa-bell" aria-hidden="true"></i>
+					<span class="label label-warning">#{notificationController.unSeenNotificationList.size()}</span>
+			</a>
+				<ul class="dropdown-menu notification-dropdown notification-modal">
+					<li class="header align-center"><h:outputFormat
+							value="#{word['youHaveNotifications']}">
+							<f:param
+								value="#{notificationController.unSeenNotificationList.size()}" />
+						</h:outputFormat></li>
+					<li>
+						<!-- inner menu: contains the actual data -->
+						<ul class="menu">
+							<h:form id="notificationTopbar">
+								<p:repeat var="unSeenNotification"
+									value="#{notificationController.unSeenNotificationList}">
+									<h:commandLink styleClass="notificationPreview"
+										action="#{notificationController.showSelectedNotification(unSeenNotification)}">
+										<li class="alert-notification-li"><div
+												class="alert alert-notification">
+												<p:graphicImage
+													name="#{commonFunctions.checkImageExistPF(notification.processedUser.profileImageURL)}"
+													library="core" width="35" height="35"
+													styleClass="halfRadius p5" />
+
+												#{word[unSeenNotification.info]}
+												<h:panelGroup
+													rendered="#{null!=unSeenNotification.processedUser}"> (#{unSeenNotification.processedUser.fullName}) (#{server.getPastDateToProcessDate(unSeenNotification.process_date)}
+								#{word['ago']})</h:panelGroup>
+											</div>
+											<hr class="style-one" /></li>
+									</h:commandLink>
+								</p:repeat>
+							</h:form>
+						</ul>
+					</li>
+					<li class="footer"><a
+						href="#{navigationUtils.buildHrefString('/notification')}">#{word['seeAllNotifications']}</a></li>
+				</ul></li>
+
+			<li class="dropdown user user-menu"><a href="#"
+				class="dropdown-toggle user-name" data-toggle="dropdown"> <p:graphicImage
+						id="userImage" library="core" name="img/user/user.png" width="24"
+						height="24" /> <span class="hidden-xs">#{activeUserService.fetchActiveUser().fullName}</span>
+			</a>
+				<ul class="dropdown-menu notification-dropdown user-modal">
+					<li class="user-header">
+						<div>
+							<p:graphicImage library="core" name="img/user/user.png"
+								width="80" />
+						</div> <p:link
+							outcome="#{navigationUtils.buildOutcomeRedirectionString('/profile')}"
+							styleClass="user-profile-dropdown-info user-name">
+							<p>
+							<p>#{activeUserService.fetchActiveUser().fullName}</p>
+							<small> #{activeUserService.fetchActiveUser().email} </small>
+							</p>
+						</p:link>
+					</li>
+					<li class="user-footer user-dropdown"><p:link
+							outcome="#{navigationUtils.buildOutcomeRedirectionString('/profile')}">
+							<i class="fas fa-user user-dropdown-icon" aria-hidden="true"></i>
+							<h:outputText value="Profil" />
+						</p:link></li>
+					<li class="user-footer user-dropdown"><p:link
+							outcome="#{navigationUtils.buildOutcomeString('/profile/editinformation')}">
+							<i class="fas fa-user-edit" aria-hidden="true"></i>
+							<span>#{word['editInformation']}</span>
+						</p:link></li>
+					<li class="user-footer user-dropdown"><p:link
+							outcome="#{navigationUtils.buildOutcomeString('/profile/security')}">
+							<i class="fas fa-key" aria-hidden="true"></i>
+							<span>#{word['security']}</span>
+						</p:link></li>
+					<li class="user-footer user-dropdown"><p:link
+							outcome="#{navigationUtils.buildOutcomeString('/notification')}">
+							<i class="fas fa-bell" aria-hidden="true"></i>
+							<span class="label label-warning pull-right">#{notificationController.unSeenNotificationList.size()}</span>
+							<span>#{word['notification']}</span>
+						</p:link></li>
+					<ui:remove>
+						<li class="user-footer user-dropdown"><p:commandLink>
+								<i class="fas fa-shield-alt user-dropdown-icon"
+									aria-hidden="true"></i>
+								<h:outputText value="Güvenlik" />
+							</p:commandLink></li>
+						<li class="user-footer user-dropdown"><p:commandLink>
+								<i class="fas fa-cogs user-dropdown-icon" aria-hidden="true"></i>
+								<h:outputText value="Ayarlar" />
+							</p:commandLink></li>
+					</ui:remove>
+					<li class="user-footer user-dropdown"><p:commandLink
+							onclick="logout(); return false;">
+							<i class="fas fa-sign-out-alt user-dropdown-icon"
+								aria-hidden="true"></i>
+							<h:outputText value="#{word['logout']}" />
+						</p:commandLink></li>
+				</ul></li>
+
+			<li><a href="#" id="layout-setup" data-toggle="control-sidebar"><i
+					class="fas fa-cogs" aria-hidden="true"></i></a></li>
+
+		</ul>
+	</h:form>
+</ui:composition>

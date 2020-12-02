@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{editinformationController.startUpChecks()}"
+			onPostBack="true" />
+
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['editInformation']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li><p:link value="#{word['profile']}"
+				outcome="#{navigationUtils.buildOutcomeString('/profile')}" /></li>
+		<li class="">#{word['editInformation']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<p:panel styleClass="card no-border"
+			header="#{word['editInformation']}">
+			<h:form id="main">
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12 ui-sm-12">
+						<p:messages showSummary="true" id="messages" globalOnly="true"
+							showDetail="false" closable="true">
+						</p:messages>
+					</div>
+
+					<div class="ui-g-6 ui-sm-12">
+						<div class="ui-material">
+							<p:inputText id="email" required="true"
+								value="#{editinformationController.tmpUser.email}"
+								placeholder="#{word['email']}"
+								requiredMessage="#{word['theEmailfieldIsRequired']}">
+								<i class="fa fa-2x fa-envelope" aria-hidden="true" />
+								<f:validateLength minimum="#{commonConstants.minEmailLength}"
+									maximum="#{commonConstants.maxEmailLength}" />
+							</p:inputText>
+							<p:outputLabel for="email" value="#{word['email']}" />
+							<p:message for="email" />
+						</div>
+					</div>
+					<div class="ui-g-6 ui-sm-12">
+						<div class="ui-material">
+							<p:inputText id="name" required="true"
+								value="#{editinformationController.tmpUser.name}"
+								placeholder="#{word['name']}"
+								requiredMessage="#{word['theNamefieldIsRequired']}">
+								<i class="fa fa-2x fa-user-circle" aria-hidden="true" />
+								<f:validateLength minimum="#{commonConstants.minNameLength}"
+									maximum="#{commonConstants.maxNameLength}" />
+							</p:inputText>
+							<p:outputLabel for="name" value="#{word['name']}" />
+							<p:message for="name" />
+						</div>
+					</div>
+					<div class="ui-g-6 ui-sm-12">
+						<div class="ui-material">
+							<p:inputText id="lastName" required="true"
+								value="#{editinformationController.tmpUser.lastname}"
+								placeholder="#{word['lastName']}"
+								requiredMessage="#{word['theLastnamefieldIsRequired']}">
+								<i class="fa fa-2x fa-user-circle" aria-hidden="true" />
+								<f:validateLength minimum="#{commonConstants.minLastnameLength}"
+									maximum="#{commonConstants.maxLastnameLength}" />
+							</p:inputText>
+							<p:outputLabel for="lastName" value="#{word['lastName']}" />
+							<p:message for="lastName" />
+						</div>
+					</div>
+
+					<div class="ui-g-6 ui-sm-12">
+						<div class="ui-material">
+							<p:calendar id="dateOfBirth" showOn="both"
+								value="#{editinformationController.tmpUser.birthDate}"
+								placeholder="#{word['dateOfBirth']}" pattern="dd-MM-yyyy"
+								mask="true" required="false"
+								maxdate="#{commonDate.currentDate()}"
+								converterMessage="#{word['invalidDate']}">
+								<p:ajax event="dateSelect" global="false"
+									onstart="adminMaterial()" />
+							</p:calendar>
+							<p:outputLabel for="dateOfBirth" value="#{word['dateOfBirth']}" />
+							<p:message for="dateOfBirth" />
+						</div>
+					</div>
+
+					<div class="ui-g-6 ui-sm-12">
+						<div class="ui-material">
+							<p:inputText id="address"
+								value="#{editinformationController.tmpUser.address}"
+								placeholder="#{word['address']}">
+								<i class="fa fa-2x fa fa-address-book" aria-hidden="true" />
+							</p:inputText>
+							<p:outputLabel for="address" value="#{word['address']}" />
+							<p:message for="address" />
+						</div>
+					</div>
+				</div>
+
+				<div class="ui-g ui-fluid mt-30">
+					<div class="ui-sm-12 col-md-8 col-xs-8"></div>
+					<div class="ui-sm-12 col-md-2 col-xs-2">
+						<p:commandButton id="refresh" styleClass="btn-info"
+							value="#{word['refresh']}"
+							action="#{editinformationController.refresh}" process="@this"
+							update=":main">
+							<p:ajax update=":main" resetValues="true" />
+						</p:commandButton>
+					</div>
+					<div class="ui-sm-12 col-md-2 col-xs-2">
+						<p:defaultCommand target="saveUser" />
+						<p:commandButton id="saveUser" process="main"
+							styleClass="btn-success" value="#{word['save']}"
+							action="#{editinformationController.saveUser}" update="main">
+							<p:confirm header="#{word['confirmation']}"
+								message="#{word['areYouSureSave']}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</div>
+
+
+				</div>
+			</h:form>
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+				responsive="true">
+				<p:commandButton value="#{word['yes']}" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="#{word['no']}" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</p:panel>
+	</ui:define>
+</ui:composition>

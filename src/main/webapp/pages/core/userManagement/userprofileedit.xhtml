@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{userProfileEditController.startUpChecks()}"
+			onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['editUser']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+	<li><p:link value="#{word['userlist']}"
+				outcome="#{navigationUtils.buildOutcomeString('/userlist')}" /></li>
+		<li class="">#{word['editUser']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<ui:include src="/pages/core/userManagement/userprofile.xhtml" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{logController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['listOfLogs']}</li>
+	</ui:define>
+
+	<ui:define name="page-title">
+		#{word['listOfLogs']}
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<p:remoteCommand name="myRemote"
+				actionListener="#{logController.unloadPage()}" />
+			<p:growl id="message" showDetail="true" />
+			<p:poll interval="#{logController.refreshRate}" update=":main"
+				listener="#{logController.loadData()}" />
+			<div style="float: right; margin-bottom: 10px;">
+				<p:commandButton process="@this"
+					actionListener="#{logController.refreshSelection('refresh')}"
+					update=":main" icon="ui-icon-refresh" title="#{word['refresh']}"
+					style="border-radius: 0;" />
+				<p:commandButton process="@this"
+					actionListener="#{logController.refreshSelection('1s')}" value="1s"
+					update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logController.refreshSelection('5s')}" value="5s"
+					update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logController.refreshSelection('10s')}"
+					value="10s" update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logController.refreshSelection('15s')}"
+					value="15s" update=":main" styleClass="ui-priority-primary" />
+				<p:commandButton process="@this"
+					actionListener="#{logController.refreshSelection('manuel')}"
+					value="#{word['manuel']}" update=":main"
+					styleClass="ui-priority-primary" />
+			</div>
+			<div style="clear: both;"></div>
+			<div id="datatable-single">
+				<p:dataTable id="logTable" reflow="true"
+					emptyMessage="#{word['noRecordsFound']}" widgetVar="logTable"
+					var="log" paginator="true" rows="10"
+					rowsPerPageTemplate="5,10,15,100" value="#{logController.logList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{log.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="logTable" encoding="CP1254"
+											fileName="logTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="logTable" encoding="CP1254"
+											fileName="logTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="logTable" encoding="CP1254"
+											fileName="logTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="logTable" encoding="CP1254"
+											fileName="logTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfLogs']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										value="#{logController.searchKeyword}"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										onkeyup="PF('logTable').filter()" style="width:150px"
+										placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column headerText="#{word['processDate']}"
+						filterBy="#{commonDate.dateBeautifier(log.process_date)}"
+						filterable="false"
+						sortBy="#{commonDate.dateBeautifier(log.process_date)}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{commonDate.dateBeautifier(log.process_date)}" />
+					</p:column>
+					<p:column headerText="#{word['logInfo']}"
+						filterBy="#{word[log.logInfo]}" filterable="false"
+						sortBy="#{word[log.logInfo]}" filterMatchMode="contains">
+						<h:outputText value="#{word[log.logInfo]}" />
+					</p:column>
+					<p:column headerText="#{word['processUser']}"
+						filterBy="#{log.user.email}" filterable="false"
+						sortBy="#{log.user.email}" filterMatchMode="contains">
+						<h:outputText value="#{log.user.email}" />
+					</p:column>
+					<p:column headerText="#{word['browserInfo']}"
+						filterBy="#{log.browserInfo}" filterable="false"
+						sortBy="#{log.browserInfo}" filterMatchMode="contains">
+						<h:outputText value="#{log.browserInfo}" />
+					</p:column>
+					<p:column headerText="#{word['ip']}" filterBy="#{log.ip}"
+						filterable="false" sortBy="#{log.ip}" filterMatchMode="contains">
+						<h:outputText value="#{log.ip}" />
+					</p:column>
+					<p:column headerText="#{word['enteredUrl']}"
+						filterBy="#{log.enteredURL}" filterable="false"
+						sortBy="#{log.enteredURL}" filterMatchMode="contains">
+						<h:outputText value="#{log.enteredURL}" />
+					</p:column>
+					<p:column headerText="#{word['processedUser']}"
+						filterBy="#{log.processUser.email}" filterable="false"
+						sortBy="#{log.processUser.email}" filterMatchMode="contains">
+						<h:outputText value="#{log.processUser.email}" />
+					</p:column>
+					<f:facet name="footer">
+						      #{word['inTotal']} #{logController.logList.size()} #{word['log']}.
+						    </f:facet>
+				</p:dataTable>
+			</div>
+		</h:form>
+		<script type="text/javascript">
+   window.onbeforeunload = function() {
+	   myRemote(); 
+	 }
+</script>
+	</ui:define>
+</ui:composition>

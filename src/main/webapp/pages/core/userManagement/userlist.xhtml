@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{userController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['userList']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['userList']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<p:messages id="messages" showDetail="false" closable="true" />
+			<div class="ui-g" style="margin-bottom: 10px;">
+
+				<sec:authorize
+					access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_ADD')">
+					<p:commandButton styleClass="btn-primary" id="addUser"
+						value="#{word['addUser']}" action="#{userController.addUser()}" />
+				</sec:authorize>
+
+
+			</div>
+			<div id="datatable-single">
+				<p:dataTable id="usersTable" reflow="true" widgetVar="usersTable"
+					var="user" paginator="true" rows="10"
+					emptyMessage="#{word['noRecordsFound']}"
+					rowsPerPageTemplate="5,10,15,100"
+					value="#{userController.userList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{user.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="usersTable"
+											encoding="CP1254" fileName="usersTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="usersTable"
+											encoding="CP1254" fileName="usersTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="usersTable"
+											encoding="CP1254" fileName="usersTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="usersTable"
+											encoding="CP1254" fileName="usersTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfUser']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										value="#{userController.searchKeyword}"
+										onkeyup="PF('usersTable').filter()" style="width:150px"
+										placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column exportable="false"
+						filterBy="#{word[user.checkOnlineStatus()?'online':'offline']}"
+						filterable="false"
+						sortBy="#{word[user.checkOnlineStatus()?'online':'offline']}"
+						filterMatchMode="contains" style="text-align:center;">
+						<p:graphicImage
+							name="#{commonFunctions.checkImageExistPF(user.profileImageURL)}"
+							library="core" width="45px" height="45px"
+							title="#{word[user.checkOnlineStatus()?'online':'offline']}"
+							class="halfRadius #{user.checkOnlineStatus()?'onlineStatus':'offlineStatus'}" />
+					</p:column>
+					<p:column headerText="#{word['name']}" filterBy="#{user.name}"
+						filterable="false" sortBy="#{user.name}"
+						filterMatchMode="contains">
+						<h:outputText value="#{user.name}" />
+					</p:column>
+					<p:column headerText="#{word['lastName']}"
+						filterBy="#{user.lastname}" filterable="false"
+						sortBy="#{user.lastname}" filterMatchMode="contains">
+						<h:outputText value="#{user.lastname}" />
+					</p:column>
+					<p:column headerText="#{word['email']}" filterBy="#{user.email}"
+						filterable="false" sortBy="#{user.email}"
+						filterMatchMode="contains">
+						<h:outputText value="#{user.email}" />
+					</p:column>
+					<p:column headerText="#{word['roles']}" filterable="false"
+						filterMatchMode="contains">
+
+						<h:outputText value="#{user.role.retrieveRoleTypesAsString()}" />
+
+					</p:column>
+					<p:column headerText="#{word['language']}"
+						filterBy="#{word[user.language.code]}" filterable="false"
+						sortBy="#{word[user.language.code]}" filterMatchMode="contains">
+						<h:outputText value="#{word[user.language.code]}" />
+					</p:column>
+					<p:column headerText="#{word['lastSeen']}"
+						filterBy="#{commonDate.dateBeautifier(user.lastSeen)}"
+						filterable="false"
+						sortBy="#{commonDate.dateBeautifier(user.lastSeen)}"
+						filterMatchMode="contains">
+						<h:outputText value="#{commonDate.dateBeautifier(user.lastSeen)}" />
+					</p:column>
+					<p:column headerText="#{word['address']}"
+						filterBy="#{user.address}" filterable="false"
+						sortBy="#{user.address}" filterMatchMode="contains">
+						<h:outputText value="#{user.address}" />
+					</p:column>
+					<p:column exportable="false">
+						<f:facet name="header">#{word['action']}</f:facet>
+						<sec:authorize
+							access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_VIEW')">
+							<sec:authorize
+								access="hasAnyAuthority('ROLE_USER_MANAGEMENT-PERMISSION_EDIT' , 'ROLE_USER_MANAGEMENT-PERMISSION_REMOVE' , 'ROLE_USER_MANAGEMENT-PERMISSION_BLOCK' , 'ROLE_USER_MANAGEMENT-PERMISSION_UNBLOCK')">
+								<p:splitButton value="#{word['view']}" icon="fa fa-eye"
+									ignoreAutoUpdate="true"
+									actionListener="#{userController.setTmpUser(user)}"
+									update=":main:userQuickView" title="#{word['view']}"
+									oncomplete=" PF('userQuickView').show();"
+									styleClass="#{user.active?'btn-primary':'btn-danger'} userlist">
+									<sec:authorize
+										access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_EDIT')">
+										<p:menuitem icon="fa fa-pencil-square-o"
+											value="#{word['editUser']}"
+											action="#{userController.editUser(user)}"
+											style="border-radius: 0;" />
+									</sec:authorize>
+
+									<sec:authorize
+										access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_BLOCK')">
+										<p:menuitem
+											rendered="#{user.id != activeUserService.fetchActiveUser().id and user.active}"
+											icon="fa fa-close" value="#{word['blockUser']}"
+											actionListener="#{userController.blockUser(user)}"
+											update=":main" style="border-radius: 0; ">
+											<p:confirm header="#{word['confirmation']}"
+												message="#{word['areYouSureBlock']}" icon="ui-icon-alert" />
+										</p:menuitem>
+									</sec:authorize>
+
+									<sec:authorize
+										access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_UNBLOCK')">
+										<p:menuitem
+											rendered="#{user.id != activeUserService.fetchActiveUser().id and !user.active}"
+											icon="fa fa-check" value="#{word['unblockUser']}"
+											actionListener="#{userController.unblockUser(user)}"
+											update=":main" style="border-radius: 0; ">
+											<p:confirm header="#{word['confirmation']}"
+												message="#{word['areYouSureUnblock']}" icon="ui-icon-alert" />
+										</p:menuitem>
+									</sec:authorize>
+
+									<sec:authorize
+										access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_REMOVE')">
+										<p:menuitem
+											rendered="#{user.id != activeUserService.fetchActiveUser().id}"
+											icon="fa fa-trash" value="#{word['deleteUser']}"
+											actionListener="#{userController.deleteUser(user)}"
+											partialSubmit="true" update=":main" process="@this"
+											style="border-radius: 0; ">
+											<p:confirm header="#{word['confirmation']}"
+												message="#{word['areYouSureDelete']}" icon="ui-icon-alert"
+												update=":main:usersTable" />
+										</p:menuitem>
+									</sec:authorize>
+								</p:splitButton>
+							</sec:authorize>
+
+							<sec:authorize
+								access="!hasAnyAuthority('ROLE_USER_MANAGEMENT-PERMISSION_EDIT' , 'ROLE_USER_MANAGEMENT-PERMISSION_REMOVE' , 'ROLE_USER_MANAGEMENT-PERMISSION_BLOCK' , 'ROLE_USER_MANAGEMENT-PERMISSION_UNBLOCK')">
+								<p:commandButton value="#{word['view']}" icon="fa fa-eye"
+									actionListener="#{userController.setTmpUser(user)}"
+									update=":main:userQuickView" title="#{word['view']}"
+									oncomplete=" PF('userQuickView').show();"
+									styleClass="#{user.active?'btn-primary':'btn-danger'}">
+								</p:commandButton>
+							</sec:authorize>
+						</sec:authorize>
+
+					</p:column>
+					<f:facet name="footer">
+				       #{word['inTotal']} #{userController.userList.size()} #{word['users']}.
+				    </f:facet>
+				</p:dataTable>
+				<p:dialog id="userQuickView" header="#{word['userQuickView']}"
+					responsive="true" widgetVar="userQuickView" modal="true"
+					draggable="false" resizable="false"
+					appendTo="@(body)">
+					<div class="ui-g-12">
+						<div class="ui-g-12" style="text-align: center;">
+							<p:graphicImage
+								class="halfRadius #{userController.tmpUser.checkOnlineStatus()?'onlineStatus':'offlineStatus'}"
+								name="#{commonFunctions.checkImageExistPF(userController.tmpUser.profileImageURL)}"
+								library="core" width="80" height="80" styleClass="halfRadius" />
+						</div>
+						<div class="ui-g-12">
+							<h5>
+								#{userController.tmpUser.fullName}<br /> <span>#{userController.tmpUser.email}</span>
+							</h5>
+							<p>
+								<h:panelGroup rendered="#{!userController.tmpUser.active}">#{word['blocked']}</h:panelGroup>
+								<h:panelGroup rendered="#{userController.tmpUser.active}">#{word['active']}</h:panelGroup>
+							</p>
+							<p>#{userController.tmpUser.address}</p>
+						</div>
+					</div>
+				</p:dialog>
+			</div>
+		</h:form>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+			responsive="true">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

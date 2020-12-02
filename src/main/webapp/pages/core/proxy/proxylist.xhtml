@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{webProxyController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+
+	<ui:define name="page-title">
+		#{word['proxyList']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['proxyList']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<style>
+.ui-selectonemenu-panel {
+	z-index: 9999 !important;
+}
+</style>
+		<h:form id="main">
+			<p:messages id="messages" showDetail="false" closable="true" />
+			<div class="ui-g" style="margin-bottom: 10px;">
+				<p:commandButton value="#{word['addProxy']}" icon="fa fa-eye"
+					actionListener="#{webProxyController.prepareNewProxy()}"
+					process="@this" update=":proxyAddView"
+					title="#{word['proxyAddView']}"
+					oncomplete=" PF('proxyAddView').show();" ignoreAutoUpdate="true"
+					partialSubmit="true">
+				</p:commandButton>
+			</div>
+			<div id="datatable-single">
+				<p:dataTable id="webProxyTable" reflow="true"
+					widgetVar="webProxyTable" var="webProxy" paginator="true" rows="10"
+					emptyMessage="#{word['noRecordsFound']}"
+					rowsPerPageTemplate="5,10,15,100"
+					value="#{webProxyController.webProxyList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{webProxy.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfProxy']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										value="#{webProxyController.searchKeyword}"
+										onkeyup="PF('webProxyTable').filter()" style="width:150px"
+										placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column headerText="#{word['groupName']}"
+						filterBy="#{webProxy.webProxyGroup.name}" filterable="false"
+						sortBy="#{webProxy.webProxyGroup.name}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.webProxyGroup.name}" />
+					</p:column>
+					<p:column headerText="#{word['proxyHost']}"
+						filterBy="#{webProxy.host}" filterable="false"
+						sortBy="#{webProxy.host}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.host}" />
+					</p:column>
+					<p:column headerText="#{word['proxyPort']}"
+						filterBy="#{webProxy.port}" filterable="false"
+						sortBy="#{webProxy.port}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.port}" />
+					</p:column>
+					<p:column headerText="#{word['createDate']}"
+						filterBy="#{webProxy.createDate}" filterable="false"
+						sortBy="#{webProxy.createDate}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.createDate}" />
+					</p:column>
+					<p:column headerText="#{word['errorCount']}"
+						filterBy="#{webProxy.errorCount}" filterable="false"
+						sortBy="#{webProxy.errorCount}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.errorCount}" />
+					</p:column>
+					<p:column headerText="#{word['errorCountInLast10Min']}"
+						filterBy="#{webProxy.errorCountInLast10Min}" filterable="false"
+						sortBy="#{webProxy.errorCountInLast10Min}"
+						filterMatchMode="contains">
+						<h:outputText value="#{webProxy.errorCountInLast10Min}" />
+					</p:column>
+					<p:column headerText="#{word['usageCount']}"
+						filterBy="#{webProxy.usageCount}" filterable="false"
+						sortBy="#{webProxy.usageCount}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.usageCount}" />
+					</p:column>
+					<p:column headerText="#{word['usageCountInLast10Min']}"
+						filterBy="#{webProxy.usageCountInLast10Min}" filterable="false"
+						sortBy="#{webProxy.usageCountInLast10Min}"
+						filterMatchMode="contains">
+						<h:outputText value="#{webProxy.usageCountInLast10Min}" />
+					</p:column>
+					<p:column headerText="#{word['lastSuccessProcessDate']}"
+						filterBy="#{commonDate.dateBeautifier(webProxy.lastSuccessDate)}"
+						filterable="false"
+						sortBy="#{commonDate.dateBeautifier(webProxy.lastSuccessDate)}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{commonDate.dateBeautifier(webProxy.lastSuccessDate)}" />
+					</p:column>
+					<p:column headerText="#{word['lastUsageDate']}"
+						filterBy="#{commonDate.dateBeautifier(webProxy.lastUsageDate)}"
+						filterable="false"
+						sortBy="#{commonDate.dateBeautifier(webProxy.lastUsageDate)}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{commonDate.dateBeautifier(webProxy.lastUsageDate)}" />
+					</p:column>
+					<p:column headerText="#{word['lastErrorDate']}"
+						filterBy="#{commonDate.dateBeautifier(webProxy.lastErrorDate)}"
+						filterable="false"
+						sortBy="#{commonDate.dateBeautifier(webProxy.lastErrorDate)}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{commonDate.dateBeautifier(webProxy.lastErrorDate)}" />
+					</p:column>
+					<p:column headerText="#{word['activeWorkerOnProxy']}"
+						filterBy="#{webProxy.activeWorkerOnProxy}" filterable="false"
+						sortBy="#{webProxy.activeWorkerOnProxy}"
+						filterMatchMode="contains">
+						<h:outputText value="#{webProxy.activeWorkerOnProxy}" />
+					</p:column>
+
+					<p:column exportable="false">
+						<f:facet name="header">#{word['action']}</f:facet>
+
+						<p:splitButton value="#{word['view']}" icon="fa fa-eye"
+							ignoreAutoUpdate="true"
+							actionListener="#{webProxyController.setTmpWebProxy(webProxy)}"
+							update=":main:proxyQuickView" title="#{word['view']}"
+							oncomplete=" PF('proxyQuickView').show();" process="@this"
+							styleClass="#{user.active?'btn-primary':'btn-danger'} userlist">
+							<p:menuitem icon="fa fa-pencil-square-o"
+								value="#{word['deleteProxy']}"
+								action="#{webProxyController.deleteWebProxy(webProxy)}"
+								update="main" style="border-radius: 0;" />
+							<p:menuitem icon="fa fa-pencil-square-o"
+								value="#{word['editProxy']}"
+								action="#{webProxyController.setTmpWebProxy(webProxy)}"
+								process="@this" update=":proxyAddView"
+								title="#{word['editProxy']}" style="border-radius: 0;"
+								oncomplete=" PF('proxyAddView').show();" />
+
+
+							<ui:remove>
+								<sec:authorize
+									access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_BLOCK')">
+									<p:menuitem
+										rendered="#{user.id != activeUserService.fetchActiveUser().id and user.active}"
+										icon="fa fa-close" value="#{word['blockUser']}"
+										actionListener="#{webProxyController.blockUser(user)}"
+										update=":main" style="border-radius: 0; ">
+										<p:confirm header="#{word['confirmation']}"
+											message="#{word['areYouSureBlock']}" icon="ui-icon-alert" />
+									</p:menuitem> />
+								</sec:authorize>
+
+								<sec:authorize
+									access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_UNBLOCK')">
+									<p:menuitem
+										rendered="#{user.id != activeUserService.fetchActiveUser().id and !user.active}"
+										icon="fa fa-check" value="#{word['unblockUser']}"
+										actionListener="#{webProxyController.unblockUser(user)}"
+										update=":main" style="border-radius: 0; ">
+										<p:confirm header="#{word['confirmation']}"
+											message="#{word['areYouSureUnblock']}" icon="ui-icon-alert" />
+									</p:menuitem>
+								</sec:authorize>
+
+								<sec:authorize
+									access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_REMOVE')">
+									<p:menuitem
+										rendered="#{user.id != activeUserService.fetchActiveUser().id}"
+										icon="fa fa-trash" value="#{word['deleteUser']}"
+										actionListener="#{webProxyController.deleteUser(user)}"
+										partialSubmit="true" update="main" process="@this"
+										style="border-radius: 0; ">
+										<p:confirm header="#{word['confirmation']}"
+											message="#{word['areYouSureDelete']}" icon="ui-icon-alert" />
+									</p:menuitem>
+								</sec:authorize>
+							</ui:remove>
+						</p:splitButton>
+
+						<ui:remove>
+							<p:commandButton value="#{word['view']}" icon="fa fa-eye"
+								actionListener="#{webProxyController.setTmpWebProxy(webProxy)}"
+								update=":main:proxyQuickView" title="#{word['view']}"
+								oncomplete=" PF('proxyQuickView').show();" process="@this"
+								styleClass="#{user.active?'btn-primary':'btn-danger'}">
+							</p:commandButton>
+						</ui:remove>
+
+					</p:column>
+					<f:facet name="footer">
+       #{word['inTotal']} #{webProxyController.webProxyList.size()} #{word['proxy']}.
+    </f:facet>
+				</p:dataTable>
+				<p:dialog id="proxyQuickView" header="#{word['proxyQuickView']}"
+					responsive="true" widgetVar="proxyQuickView" modal="true"
+					draggable="false" closable="true" resizable="false"
+					showHeader="false" appendTo="@(body)">
+					<div class="ui-g-12">
+						<div class="ui-g-12">
+							<h5>
+								#{webProxyController.tmpWebProxy.host}: <span>#{webProxyController.tmpWebProxy.port}</span>
+							</h5>
+							<p>Create Date : #{webProxyController.tmpWebProxy.createDate}</p>
+							<p>Update Date : #{webProxyController.tmpWebProxy.updateDate}</p>
+							<p>Last Reset Date :
+								#{webProxyController.tmpWebProxy.lastResetDate}</p>
+						</div>
+					</div>
+				</p:dialog>
+
+			</div>
+		</h:form>
+		<p:dialog id="proxyAddView" header="#{word['proxyAddView']}"
+			responsive="true" widgetVar="proxyAddView" modal="true"
+			draggable="false" closable="true" resizable="false"
+			showHeader="false" appendTo="@(body)">
+			<h:form>
+				<div class="ui-g-12">
+					<div class="ui-g-12">
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-8 ui-sm-12">
+								<div class="ui-material">
+									<p:inputText id="host" required="true"
+										value="#{webProxyController.tmpWebProxy.host}"
+										placeholder="#{word['host']}" />
+									<p:outputLabel for="host" value="#{word['host']}" />
+									<p:message for="host" />
+								</div>
+							</div>
+							<div class="ui-g-4 ui-sm-12">
+								<div class="ui-material">
+									<p:inputText id="port" required="true"
+										value="#{webProxyController.tmpWebProxy.port}"
+										placeholder="#{word['port']}" />
+									<p:outputLabel for="port" value="#{word['port']}" />
+									<p:message for="port" />
+								</div>
+							</div>
+							<div class="ui-g-8 ui-sm-12">
+								<p:selectOneMenu styleClass="white-selectmenu" id="language"
+									value="#{webProxyController.selectedTmpProxyGroup}"
+									style="z-index:9999;">
+									<f:selectItems value="#{webProxyController.webProxyGroups}"
+										var="webProxyGroup" itemLabel="#{webProxyGroup.name}"
+										itemValue="#{webProxyGroup.name}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-4 ui-sm-12">
+								<p:commandButton styleClass="btn-primary"
+									value="#{word['save']}"
+									actionListener="#{webProxyController.addWebProxy()}"
+									update=":main" process="@form"
+									oncomplete=" PF('proxyAddView').hide();" partialSubmit="true" />
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</p:dialog>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+			responsive="true">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

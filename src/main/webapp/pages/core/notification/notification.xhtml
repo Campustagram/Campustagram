@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{notificationController.sortListBySeen()}" onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{notificationController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['notifications']}</li>
+	</ui:define>
+
+	<ui:define name="page-title">
+		#{word['notifications']}
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<style>
+.newBullet {
+	background-color: #2ba65c !important;
+	color: white;
+	margin-right: 15px;
+	border-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	padding: 0 8px;
+}
+</style>
+		<h:form id="main">
+			<p:growl id="message" showDetail="true" />
+			<div id="datatable-single">
+				<p:dataTable id="notificationTable" reflow="true"
+					emptyMessage="#{word['noRecordsFound']}"
+					widgetVar="notificationTable" var="notification" paginator="true"
+					rows="10" rowsPerPageTemplate="5,10,15,100"
+					value="#{notificationController.notificationList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{notification.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="notificationTable"
+											encoding="CP1254" fileName="notificationTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="notificationTable"
+											encoding="CP1254" fileName="notificationTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="notificationTable"
+											encoding="CP1254" fileName="notificationTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="notificationTable"
+											encoding="CP1254" fileName="notificationTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfNotifications']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										value="#{notificationController.searchKeyword}"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										onkeyup="PF('notificationTable').filter()" style="width:150px"
+										placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column headerText="" exportable="false">
+						<p:commandButton icon="fa fa-eye" styleClass="btn-primary"
+							title="#{word['quickView']}"
+							oncomplete=" PF('detailedNotification').show(); "
+							actionListener="#{notificationController.setSelectedNotification(notification)}"
+							update=":main ">
+							<f:actionListener
+								binding="#{notificationController.updateAllNotificationLists()}" />
+						</p:commandButton>
+					</p:column>
+
+					<p:column headerText="#{word['info']}"
+						filterBy="#{word[notification.info]} (#{notification.processedUser.email})"
+						filterable="false"
+						sortBy="#{word[notification.info]} (#{notification.processedUser.email})"
+						filterMatchMode="contains">
+						<h:panelGroup rendered="#{notification.seen==false}">
+							<span class="newNotificationBox newBullet">#{word['new']}</span>
+						</h:panelGroup>
+						<h:outputText
+							value="#{word[notification.info]} (#{notification.processedUser.email})" />
+					</p:column>
+
+					<p:column headerText="#{word['performUser']}"
+						filterBy="#{notification.processUser.email}" filterable="false"
+						sortBy="#{notification.processUser.email}"
+						filterMatchMode="contains">
+						<h:outputText value="#{notification.processUser.email}" />
+					</p:column>
+
+					<p:column headerText="#{word['processDate']}"
+						filterBy="#{commonDate.dateBeautifier(notification.process_date)}"
+						filterable="false" sortBy="#{notification.process_date}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{commonDate.dateBeautifier(notification.process_date)}" />
+						<h:outputText
+							value="  (#{server.getPastDateToProcessDate(notification.process_date)}
+								#{word['ago']})" />
+					</p:column>
+					<f:facet name="footer">
+						       #{word['inTotal']} #{notificationController.notificationList.size()} #{word['notification']}.
+			</f:facet>
+				</p:dataTable>
+			</div>
+			<p:dialog id="detailedNotification" header="#{word['notification']}"
+				responsive="true" widgetVar="detailedNotification" modal="true"
+				resizable="false">
+				<div class="ui-g-12">
+					<div class="ui-g-12" style="text-align: center;">
+						<p:graphicImage
+							name="#{commonFunctions.checkImageExistPF(notificationController.selectedNotification.processedUser.profileImageURL)}"
+							library="core" width="80" height="80" styleClass="halfRadius" />
+					</div>
+					<div class="ui-g-12">
+						<p>
+							<span>
+								#{word[notificationController.selectedNotification.info]}</span>
+						<p style="font-size: 14px;">(#{notificationController.selectedNotification.processedUser.email})</p>
+						<br /> <span style="font-size: 16px"></span>
+						</p>
+						<p>
+							<span class="project-title"> #{word['processUser']}:
+								#{notificationController.selectedNotification.processUser.email}</span>
+							<span class="project-detail">(#{server.getPastDateToProcessDate(notificationController.selectedNotification.process_date)}
+								#{word['ago']})</span>
+						</p>
+					</div>
+				</div>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

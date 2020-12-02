@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<ui:define name="breadcrumb">
+		<li>/</li>
+		<li>#{word['systemSettings']}</li>
+	</ui:define>
+
+	<ui:define name="header">
+    	#{word['systemSettings']}
+	</ui:define>
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{systemSettingsController.startUpChecks()}"
+			onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<style type="">
+.dashboard .user-card .user-card-content .ui-button {
+	position: relative !important;
+	width: auto;
+	height: auto;
+	top: 0;
+	right: 0;
+	overflow: inherit !important;
+}
+
+.profileButtonInner {
+	margin: 0;
+	color: #000 !important;
+	background-color: #f5f1f1c2 !important;
+	height: 140px !important;
+	background-repeat: no-repeat !important;
+	background-size: 70px 70px !important;
+	background-position: 50% 10% !important;
+}
+
+.generalSettings {
+	background-image:
+		url("#{resource['serenity-layout:images/core/icon/generalSettings.png']}");
+}
+
+.systemEmail {
+	background-image:
+		url("#{resource['serenity-layout:images/core/icon/systemEmail.png']}");
+}
+
+.profileButtonInner>span.ui-button-text {
+	position: relative;
+	top: 30px;
+	font-weight: bold;
+}
+
+.ui-state-hover {
+	background-color: #f1e8e8 !important;
+}
+
+.profileButtonOuther {
+	padding: 2%;
+}
+</style>
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="card">
+					<h:form id="main">
+						<div class="ui-g dashboard">
+							<div class="ui-g-2"></div>
+							<div class="ui-g-8">
+								<p:messages id="messages" showDetail="false" closable="true">
+								</p:messages>
+								<div class="ui-g-12">
+									<div class="ui-g-12 ui-md-6 ui-lg-6 profileButtonOuther">
+										<p:commandButton
+											class="ui-g-12 profileButtonInner generalSettings"
+											action="#{systemSettingsController.generalSettings()}"
+											value="#{word['generalSettings']}" update="messages" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6 profileButtonOuther ">
+										<p:commandButton
+											class="ui-g-12 profileButtonInner systemEmail"
+											action="#{systemSettingsController.systemEmail()}"
+											value="#{word['systemEmailSettings']}" update="messages" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div style="clear: both"></div>
+					</h:form>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+						responsive="true">
+						<p:commandButton value="#{word['yes']}" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="#{word['no']}" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

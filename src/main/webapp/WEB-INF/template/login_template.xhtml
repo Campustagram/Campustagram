@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view locale="#{localeController.locale}">
+<f:loadBundle basename="internationalization.messages" var="word"/>
+	<h:head>
+		<title><ui:insert name="page-title">Spring + JSF</ui:insert> |
+			#{coreConfig.SYSTEM_NAME}</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon.ico']}" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-16x16.png']}"
+			sizes="16x16" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-32x32.png']}"
+			sizes="32x32" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-96x96.png']}"
+			sizes="96x96" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-144x144.png']}"
+			sizes="144x144" />
+		<meta name="theme-color" content="#444" />
+		<meta name="mobile-web-app-capable" content="yes" />
+
+		<h:outputStylesheet name="css/style.min.css" library="core" />
+		<h:outputStylesheet name="css/admin.min.css" library="core" />
+
+		<link rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet"
+			href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+			integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+			crossorigin="anonymous" />
+		<script type="">
+			$('link[href="/Campustagram/javax.faces.resource/theme.css.jsf?ln=primefaces-aristo"]').remove();
+			$('link[href="/javax.faces.resource/theme.css.jsf?ln=primefaces-aristo"]').remove();
+	</script>
+	
+	<h:outputStylesheet name="css/admin.min.css" library="core" />
+	
+	</h:head>
+	<h:body styleClass="hold-transition login-page" style="height: auto;">
+
+		<div id="loader" class="load-bar" style="display: none">
+			<div class="bar"></div>
+			<div class="bar"></div>
+			<div class="bar"></div>
+		</div>
+		<p:dialog id="adminStatusDialog" modal="true" widgetVar="statusDialog"
+			draggable="false" closable="false" resizable="false"
+			responsive="true" showHeader="false" appendTo="@(body)">
+			<p:graphicImage library="core"
+				name="#{coreConfig.getLogadingImage()}" width="35" height="35" />
+		</p:dialog>
+		<div class="login-box template-login">
+			<div class="login-logo">
+				<p:link href="#{navigationUtils.buildHrefString('/login')}">
+					#{coreConfig.SYSTEM_NAME}</p:link>
+			</div>
+			<div class="box login-box-body">
+				<p:selectOneMenu styleClass="white-selectmenu"
+					style="min-width:50px; position:fixed; top:10px; right:10px;     background: #fff;"
+					id="language" value="#{localeController.selectedTmpLanguage}">
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						oncomplete="refresh()"
+						listener="#{localeController.setLocale(localeController.selectedTmpLanguage)}" />
+					<f:selectItems value="#{server.languages}" var="language"
+						itemLabel="#{word[language.code]}" itemValue="#{language.code}" />
+				</p:selectOneMenu>
+				<div class="col-xs-12"
+					style="text-align: center; margin-bottom: 20px;">
+					<a href="#{navigationUtils.buildHrefString('/login')}"><p:graphicImage
+							library="core" name="img/icon/as.png" width="70" style="" /></a>
+				</div>
+				<ui:insert name="body" />
+			</div>
+		</div>
+
+		<h:outputScript library="core" name="js/main.min.js" target="head" />
+		<h:outputScript library="core" name="js/custom.min.js" target="head" />
+
+<!--		<h:outputScript library="core" name="js/admintemplate.js"
+			target="head" />
+		<h:outputScript library="core" name="js/custom.js" target="head" />-->
+	</h:body>
+</f:view>
+</html>

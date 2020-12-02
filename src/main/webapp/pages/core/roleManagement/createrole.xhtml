@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{createRoleController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="breadcrumb">
+		<li>/</li>
+		<li>#{word['createRole']}</li>
+	</ui:define>
+
+	<ui:define name="header">
+    	#{word['createRole']}
+	</ui:define>
+
+
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<ui:include src="selectroleattributes.xhtml" />
+	</ui:define>
+</ui:composition>

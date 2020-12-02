@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="breadCrumbs">
+		<li class="">Demo Datatable</li>
+	</ui:define>
+
+	<ui:define name="page-title">
+		Demo Datatable
+	</ui:define>
+
+	<ui:define name="title">
+		<h2 class="align-center">
+			<h:panelGroup>
+				Demo Datatable kullanımı için yapılmıştır.
+			</h:panelGroup>
+			<br /> <small>örnek olması için değişiklik yapmayınız. </small>
+		</h2>
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<div id="datatable-single">
+				<p:dataTable id="demoDataTable" reflow="true"
+					widgetVar="demoDataTable" var="car" paginator="true" rows="10"
+					emptyMessage="#{word['noRecordsFound']}"
+					rowsPerPageTemplate="5,10,15,100,20000"
+					value="#{demoDataTableController.cars6}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selection="#{demoDataTableController.selectedCars}"
+					rowKey="#{car.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="demoDataTable"
+											encoding="CP1254" fileName="demoDataTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="demoDataTable"
+											encoding="CP1254" fileName="demoDataTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="demoDataTable"
+											encoding="CP1254" fileName="demoDataTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="demoDataTable"
+											encoding="CP1254" fileName="demoDataTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="Demo Liste"
+									style="font-size: 18px; font-weight: bold;" />
+								<br /> Total cars: #{demoDataTableController.cars6.size()} <br />
+								<p:commandButton value="Add 10.000 demo cars" id="ajax"
+									update=":main"
+									actionListener="#{demoDataTableController.addDemoCars()}"
+									styleClass="ui-priority-primary" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										value="#{demoDataTableController.searchWord}"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										onkeyup="PF('demoDataTable').filter()" style="width:150px"
+										placeholder="search" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column selectionMode="multiple"
+						style="width:50px;text-align:center" />
+					<p:column headerText="Id" filterBy="#{car.id}" filterable="false"
+						sortBy="#{car.id}" filterMatchMode="contains">
+						<h:outputText value="#{car.id}" />
+					</p:column>
+					<p:column headerText="Year" filterBy="#{car.year}"
+						filterable="false" sortBy="#{car.year}">
+						<h:outputText value="#{car.year}" />
+					</p:column>
+					<p:column headerText="Brand" filterBy="#{car.brand}"
+						filterable="false" sortBy="#{car.brand}">
+						<h:outputText value="#{car.brand}" />
+					</p:column>
+					<p:column headerText="Color" filterBy="#{car.color}"
+						filterable="false" sortBy="#{car.color}">
+						<h:outputText value="#{car.color}" />
+					</p:column>
+					<p:column headerText="Action">
+						<p:commandButton
+							actionListener="#{demoDataTableController.deleteCar(car)}"
+							value="Delete Car" id="iconOnly" update=":main"
+							icon="ui-icon-trash" title="Delete Car" />
+					</p:column>
+					<f:facet name="footer">
+						<p:commandButton process="demoDataTable" icon="ui-icon-search"
+							value="View Selected Cars"
+							oncomplete="PF('multiCarDialog').show()"
+							update=":main:multiCarDetail" />
+					</f:facet>
+				</p:dataTable>
+				<p:dialog header="Selected Cars" widgetVar="multiCarDialog"
+					modal="true" draggable="false" closable="true" resizable="false"
+					responsive="true" showHeader="true" appendTo="@(body)">
+					<p:outputPanel id="multiCarDetail" style="text-align:center;">
+						<ui:repeat value="#{demoDataTableController.selectedCars}"
+							var="car">
+							<h:outputText value="#{car.id} - #{car.brand}"
+								style="display:block" />
+						</ui:repeat>
+					</p:outputPanel>
+				</p:dialog>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view locale="#{localeController.locale}">
+	<f:metadata>
+		<ui:insert name="metadata" />
+	</f:metadata>
+	<h:head>
+		<title><ui:insert name="page-title">Spring + JSF</ui:insert> |
+			#{coreConfig.SYSTEM_NAME}</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon.ico']}" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-16x16.png']}"
+			sizes="16x16" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-32x32.png']}"
+			sizes="32x32" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-96x96.png']}"
+			sizes="96x96" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['core/img/favicon/as-favicon-144x144.png']}"
+			sizes="144x144" />
+		<meta name="theme-color" content="#444" />
+		<meta name="mobile-web-app-capable" content="yes" />
+
+
+		<h:outputStylesheet name="css/style.min.css" library="core" />
+
+
+<!--				<h:outputStylesheet name="css/style.css" library="core" />
+<h:outputStylesheet name="css/bootstrap.min.css" library="core" />
+		<h:outputStylesheet name="css/style.css" library="core" />-->
+
+		<ui:insert name="before-head" />
+	</h:head>
+	<h:body>
+
+		<div id="preloader">
+			<div id="loader">
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="lading"></div>
+			</div>
+		</div>
+
+		<section id="page-top" class="section-style"
+			style="background-image: url(#{resource['core/img/system/maintenance-background-image.jpg']});">
+			<div class="pattern height-resize">
+				<div class="container">
+					<h1 class="site-title">
+						<ui:insert name="site-title" />
+					</h1>
+					<h3 class="section-name">
+						<span> <ui:insert name="message" />
+						</span>
+					</h3>
+					<p class="section-title">
+						<ui:insert name="message-big" />
+					</p>
+					<ui:insert name="time-countdown" />
+					<p class="time-until">
+						<ui:insert name="home-button" />
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<h:outputScript library="core" name="js/jquery.min.js"
+						target="head" />
+
+<!--		<h:outputScript library="core" name="js/jquery-2.1.0.min.js"
+			target="head" />-->
+		<script type="text/javascript">
+			/* Preloder 
+-------------------------------------------------------------------*/
+$(window).load(function () {    
+    "use strict";
+    $("#loader").fadeOut();
+    $("#preloader").delay(350).fadeOut("slow");
+});
+ /* Preloder End
+-------------------------------------------------------------------*/ 
+		</script>
+		<ui:insert name="body-end" />
+	</h:body>
+</f:view>
+</html>

@@ -1,0 +1,254 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<p:panel styleClass="card no-border"
+		header="#{null == userprofileController.tmpUser.id?word['addUser']:word['editUser']}">
+		<h:form id="main">
+			<div class="ui-g ui-fluid">
+
+				<div class="ui-g-12 ui-sm-12">
+					<p:messages showSummary="true" id="messages" globalOnly="true"
+						showDetail="false" closable="true">
+					</p:messages>
+				</div>
+
+				<div class="ui-g-6 ui-sm-12">
+					<div class="ui-material">
+						<p:inputText id="email" required="true"
+							value="#{userprofileController.tmpUser.email}"
+							placeholder="#{word['email']}"
+							requiredMessage="#{word['theEmailfieldIsRequired']}">
+							<i class="fa fa-2x fa-envelope" aria-hidden="true" />
+							<f:validateLength minimum="#{commonConstants.minEmailLength}"
+								maximum="#{commonConstants.maxEmailLength}" />
+						</p:inputText>
+						<p:outputLabel for="email" value="#{word['email']}" />
+						<p:message for="email" />
+					</div>
+				</div>
+				<div class="ui-g-6 ui-sm-12">
+					<div class="ui-material">
+						<p:inputText id="name" required="true"
+							value="#{userprofileController.tmpUser.name}"
+							placeholder="#{word['name']}"
+							requiredMessage="#{word['theNamefieldIsRequired']}">
+							<i class="fa fa-2x fa-user-circle" aria-hidden="true" />
+							<f:validateLength minimum="#{commonConstants.minNameLength}"
+								maximum="#{commonConstants.maxNameLength}" />
+						</p:inputText>
+						<p:outputLabel for="name" value="#{word['name']}" />
+						<p:message for="name" />
+					</div>
+				</div>
+				<div class="ui-g-6 ui-sm-12">
+					<div class="ui-material">
+						<p:inputText id="lastName" required="true"
+							value="#{userprofileController.tmpUser.lastname}"
+							placeholder="#{word['lastName']}"
+							requiredMessage="#{word['theLastnamefieldIsRequired']}">
+							<i class="fa fa-2x fa-user-circle" aria-hidden="true" />
+							<f:validateLength minimum="#{commonConstants.minLastnameLength}"
+								maximum="#{commonConstants.maxLastnameLength}" />
+						</p:inputText>
+						<p:outputLabel for="lastName" value="#{word['lastName']}" />
+						<p:message for="lastName" />
+					</div>
+				</div>
+
+				<div class="ui-g-6 ui-sm-12">
+					<div class="ui-material">
+						<p:calendar id="dateOfBirth" showOn="both"
+							value="#{userprofileController.tmpUser.birthDate}"
+							placeholder="#{word['dateOfBirth']}" pattern="dd-MM-yyyy"
+							mask="true" required="false"
+							maxdate="#{commonDate.currentDate()}"
+							converterMessage="#{word['invalidDate']}">
+							<p:ajax event="dateSelect" global="false"
+								onstart="adminMaterial()" />
+						</p:calendar>
+						<p:outputLabel for="dateOfBirth" value="#{word['dateOfBirth']}" />
+						<p:message for="dateOfBirth" />
+					</div>
+				</div>
+
+				<div class="ui-g-6 ui-sm-12">
+					<div class="ui-material">
+						<p:inputText id="address"
+							value="#{userprofileController.tmpUser.address}"
+							placeholder="#{word['address']}">
+							<i class="fa fa-2x fa fa-address-book" aria-hidden="true" />
+						</p:inputText>
+						<p:outputLabel for="address" value="#{word['address']}" />
+						<p:message for="address" />
+					</div>
+				</div>
+
+				<div class="ui-g-6 ui-sm-12">
+					<div class="ui-material">
+						<p:selectOneMenu id="language"
+							value="#{userprofileController.selectedTmpLanguage}">
+							<f:selectItems value="#{server.languages}" var="language"
+								itemLabel="#{word[language.code]}" itemValue="#{language.code}" />
+						</p:selectOneMenu>
+						<p:outputLabel for="language" value="#{word['language']}" />
+						<p:message for="language" />
+					</div>
+				</div>
+
+				<h:panelGroup rendered="#{null == userprofileController.tmpUser.id}">
+					<div class="ui-g-6 ui-sm-12">
+						<div class="ui-material">
+							<p:password id="password" placeholder="#{word['password']}"
+								value="#{userprofileController.password}" required="true"
+								requiredMessage="#{word['thePasswordfieldIsRequired']}">
+								<i class="fa fa-2x fa-lock" aria-hidden="true" />
+								<f:validateLength minimum="#{commonConstants.minPasswordLength}"
+									maximum="#{commonConstants.maxPasswordLength}" />
+							</p:password>
+							<p:outputLabel for="password" value="#{word['password']}" />
+							<p:message for="password" />
+						</div>
+					</div>
+
+					<div class="ui-g-6 ui-sm-12">
+						<div class="ui-material">
+							<p:password id="reEnterPassword"
+								placeholder="#{word['reEnterPassword']}"
+								value="#{userprofileController.tempPassword}" required="true"
+								requiredMessage="#{word['theReEnterPasswordfieldIsRequired']}">
+								<i class="fa fa-2x fa-lock" />
+								<f:validateLength minimum="#{commonConstants.minPasswordLength}"
+									maximum="#{commonConstants.maxPasswordLength}" />
+							</p:password>
+							<p:outputLabel for="reEnterPassword"
+								value="#{word['reEnterPassword']}" />
+							<p:message for="reEnterPassword" />
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<div class="ui-g-6 ui-sm-12">
+					<div class="ui-material">
+						<p:selectOneMenu id="roles"
+							value="#{userprofileController.selectedRoleName}" multiple="true"
+							filter="true" filterMatchMode="startsWith"
+							panelStyle="width:260px" required="true"
+							requiredMessage="#{word['theRolesfieldIsRequired']}">
+							<ui:remove>
+								<f:selectItem
+									itemLabel="#{userprofileController.selectedRoleName}"
+									itemValue="#{userprofileController.selectedRoleName}" />
+							</ui:remove>
+							<f:selectItems var="role" itemLabel="#{role}" itemValue="#{role}"
+								value="#{userprofileController.allRoleStrings}" />
+						</p:selectOneMenu>
+						<p:outputLabel for="roles" value="#{word['roles']}" />
+						<p:message for="roles" />
+					</div>
+				</div>
+			</div>
+
+			<div class="ui-g ui-fluid mt-30">
+				<h:panelGroup rendered="#{null != userprofileController.tmpUser.id}">
+					<div class="ui-sm-12 col-md-4 col-xs-2"></div>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{null == userprofileController.tmpUser.id}">
+					<div class="ui-sm-12 col-md-8 col-xs-8"></div>
+				</h:panelGroup>
+
+				<sec:authorize
+					access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_BLOCK')">
+					<h:panelGroup
+						rendered="#{null != userprofileController.tmpUser.id}">
+						<h:panelGroup
+							rendered="#{userprofileController.tmpUser.id != activeUserService.fetchActiveUser().id and userprofileController.tmpUser.active}">
+							<div class="ui-sm-12 col-md-2 col-xs-3">
+								<p:commandButton id="blockUser" styleClass="btn-danger"
+									value="#{word['blockUser']}" title="Block"
+									actionListener="#{userprofileController.blockUser(userprofileController.tmpUser)}"
+									update=":main">
+									<p:confirm header="#{word['confirmation']}"
+										message="#{word['areYouSureBlock']}" icon="ui-icon-alert" />
+								</p:commandButton>
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
+				</sec:authorize>
+
+				<sec:authorize
+					access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_UNBLOCK')">
+					<h:panelGroup
+						rendered="#{null != userprofileController.tmpUser.id}">
+						<h:panelGroup
+							rendered="#{userprofileController.tmpUser.id != activeUserService.fetchActiveUser().id and !userprofileController.tmpUser.active}">
+							<div class="ui-sm-12 col-md-2 col-xs-3">
+								<p:commandButton id="unblockUser" styleClass="btn-teal"
+									value="#{word['unblockUser']}" title="Open Block"
+									actionListener="#{userprofileController.unblockUser(userprofileController.tmpUser)}"
+									update=":main">
+									<p:confirm header="#{word['confirmation']}"
+										message="#{word['areYouSureUnblock']}" icon="ui-icon-alert" />
+								</p:commandButton>
+
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
+				</sec:authorize>
+
+				<h:panelGroup rendered="#{null != userprofileController.tmpUser.id}">
+					<div class="ui-sm-12 col-md-2 col-xs-2">
+						<p:commandButton id="refresh" styleClass="btn-info"
+							value="#{word['refresh']}"
+							action="#{userprofileController.refresh}" process="@this"
+							update=":main">
+							<p:ajax update=":main" resetValues="true" />
+						</p:commandButton>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{null == userprofileController.tmpUser.id}">
+					<div class="ui-sm-12 col-md-2 col-xs-2">
+						<p:commandButton id="reset" styleClass="btn-info"
+							value="#{word['clear']}" action="#{userprofileController.reset}"
+							process="@this" update=":main">
+						</p:commandButton>
+					</div>
+				</h:panelGroup>
+				<div class="ui-sm-12 col-md-2 col-xs-2">
+					<ui:remove>
+						<p:defaultCommand target="saveUser" />
+					</ui:remove>
+					<p:commandButton id="saveUser" process="main"
+						styleClass="btn-success" value="#{word['save']}"
+						action="#{userprofileController.saveUser}" update="main">
+						<p:confirm header="#{word['confirmation']}"
+							message="#{word['areYouSureSave']}" icon="ui-icon-alert" />
+					</p:commandButton>
+				</div>
+				<h:panelGroup rendered="#{null != userprofileController.tmpUser.id}">
+					<div class="ui-sm-12 col-md-2 col-xs-3">
+						<p:commandButton id="deleteUser" value="#{word['deleteUser']}"
+							rendered="#{userprofileController.tmpUser.id != activeUserService.fetchActiveUser().id}"
+							action="#{userprofileController.deleteUser(userprofileController.tmpUser)}"
+							process="@this" styleClass="btn-fatal" update=":main"
+							ignoreAutoUpdate="true">
+							<p:confirm header="#{word['confirmation']}"
+								message="#{word['areYouSureDelete']}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</div>
+				</h:panelGroup>
+			</div>
+		</h:form>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+			responsive="true">
+			<p:commandButton value="#{word['yes']}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="#{word['no']}" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{ticketController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['ticket']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['ticket']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<p:messages id="messages" showDetail="false" closable="true">
+				<p:autoUpdate></p:autoUpdate>
+			</p:messages>
+			<div class="ui-g" style="margin-bottom: 10px;">
+				<sec:authorize
+					access="hasAuthority('ROLE_SUPPORT_MANAGEMENT-PERMISSION_TICKET_OPEN')">
+					<p:commandButton styleClass="btn-primary" id="openNewTicket"
+						value="#{word['openNewTicket']}"
+						action="#{ticketController.openNewTicket()}" />
+				</sec:authorize>
+			</div>
+			<div id="datatable-single">
+				<p:dataTable id="ticketsTable" reflow="true"
+					widgetVar="ticketsTable" var="ticket" paginator="true" rows="10"
+					emptyMessage="#{word['noRecordsFound']}"
+					rowsPerPageTemplate="5,10,15,100"
+					value="#{ticketController.ticketList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{ticket.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="ticketsTable"
+											encoding="CP1254" fileName="ticketsTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="ticketsTable"
+											encoding="CP1254" fileName="ticketsTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="ticketsTable"
+											encoding="CP1254" fileName="ticketsTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="ticketsTable"
+											encoding="CP1254" fileName="ticketsTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfTicket']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										value="#{ticketController.searchKeyword}"
+										onkeyup="PF('ticketsTable').filter()" style="width:150px"
+										placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column headerText="#{word['createDate']}"
+						filterBy="#{ticket.createDate}" filterable="false"
+						sortBy="#{ticket.createDate}" filterMatchMode="contains">
+						<h:outputText value="#{ticket.createDate}" />
+					</p:column>
+					<p:column headerText="#{word['ticketPriority']}"
+						filterBy="#{ticket.priority}" filterable="false"
+						sortBy="#{ticket.priority}" filterMatchMode="contains">
+						<h:outputText value="#{word[ticket.priority]}" />
+					</p:column>
+					<p:column headerText="#{word['subject']}"
+						filterBy="#{ticket.subject}" filterable="false"
+						sortBy="#{ticket.subject}" filterMatchMode="contains">
+						<h:outputText value="#{ticket.subject}" />
+					</p:column>
+					<p:column headerText="#{word['status']}"
+						filterBy="#{ticket.status}" filterable="false"
+						sortBy="#{ticket.status}" filterMatchMode="contains">
+						<h:outputText value="#{word[ticket.status]}" />
+					</p:column>
+					<p:column headerText="#{word['lastUpdate']}"
+						filterBy="#{ticket.updateDate}" filterable="false"
+						sortBy="#{ticket.updateDate}" filterMatchMode="contains">
+						<h:outputText value="#{ticket.updateDate}" />
+					</p:column>
+
+					<p:column exportable="false">
+						<f:facet name="header">#{word['action']}</f:facet>
+
+						<p:commandButton value="#{word['view']}" icon="fa fa-eye"
+							action="#{ticketController.viewTicket(ticket)}" update=":main"
+							title="#{word['view']}">
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+				       #{word['inTotal']} #{ticketController.ticketList.size()} #{word['tickets']}.
+				    </f:facet>
+				</p:dataTable>
+				<ui:remove>
+					<p:dialog id="userQuickView" header="#{word['userQuickView']}"
+						responsive="true" widgetVar="userQuickView" modal="true"
+						draggable="false" closable="true" resizable="false"
+						showHeader="false" appendTo="@(body)">
+						<div class="ui-g-12">
+							<div class="ui-g-12" style="text-align: center;">
+								<p:graphicImage
+									class="halfRadius #{ticketController.tmpUser.checkOnlineStatus()?'onlineStatus':'offlineStatus'}"
+									name="#{commonFunctions.checkImageExistPF(ticketController.tmpUser.profileImageURL)}"
+									library="core" width="80" height="80" styleClass="halfRadius" />
+							</div>
+							<div class="ui-g-12">
+								<h5>
+									#{ticketController.tmpUser.fullName}<br /> <span>#{ticketController.tmpUser.email}</span>
+								</h5>
+								<p>
+									<h:panelGroup rendered="#{!ticketController.tmpUser.active}">#{word['blocked']}</h:panelGroup>
+									<h:panelGroup rendered="#{ticketController.tmpUser.active}">#{word['active']}</h:panelGroup>
+								</p>
+								<p>#{ticketController.tmpUser.address}</p>
+							</div>
+
+						</div>
+					</p:dialog>
+				</ui:remove>
+			</div>
+		</h:form>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+			responsive="true">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

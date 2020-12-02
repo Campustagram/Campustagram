@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{webProxyCheckController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+
+	<ui:define name="page-title">
+		#{word['proxyList']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['proxyList']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<style>
+.ui-selectonemenu-panel {
+	z-index: 9999 !important;
+}
+</style>
+		<h:form id="main">
+			<p:messages id="messages" showDetail="false" closable="true">
+				<p:autoUpdate />
+			</p:messages>
+			<div class="ui-g" style="margin-bottom: 10px;">
+				<p:inputText placeholder="#{word['checkUrl']}"
+					value="#{webProxyCheckController.checkUrl}" required="true" />
+				<p:inputNumber placeholder="#{word['connectionTimeout']}"
+					decimalPlaces="0"
+					value="#{webProxyCheckController.connectionTimeout}"
+					required="true" />
+				<p:commandButton value="#{word['checkProxy']}" icon="fa fa-eye"
+					actionListener="#{webProxyCheckController.checkUrl()}"
+					update=":main" title="#{word['checkProxy']}">
+				</p:commandButton>
+			</div>
+			<div id="datatable-single">
+				<p:dataTable id="webProxyTable" reflow="true"
+					widgetVar="webProxyTable" var="webProxy" paginator="true" rows="10"
+					emptyMessage="#{word['noRecordsFound']}"
+					rowsPerPageTemplate="5,10,15,100"
+					value="#{webProxyCheckController.webProxyList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{webProxy.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="webProxyTable"
+											encoding="CP1254" fileName="webProxyTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfProxy']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										value="#{webProxyCheckController.searchKeyword}"
+										onkeyup="PF('webProxyTable').filter()" style="width:150px"
+										placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column headerText="#{word['groupName']}"
+						filterBy="#{webProxy.webProxyGroup.name}" filterable="false"
+						sortBy="#{webProxy.webProxyGroup.name}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.webProxyGroup.name}" />
+					</p:column>
+					<p:column headerText="#{word['proxyHost']}"
+						filterBy="#{webProxy.host}" filterable="false"
+						sortBy="#{webProxy.host}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.host}" />
+					</p:column>
+					<p:column headerText="#{word['proxyPort']}"
+						filterBy="#{webProxy.port}" filterable="false"
+						sortBy="#{webProxy.port}" filterMatchMode="contains">
+						<h:outputText value="#{webProxy.port}" />
+					</p:column>
+					<p:column headerText="#{word['checkUrlAccessTime']}"
+						filterBy="#{webProxy.urlAccessTime}" filterable="false"
+						sortBy="#{webProxy.urlAccessTime}" filterMatchMode="contains">
+						<p:commandButton value="#{word['checkProxy']}" icon="fa fa-eye"
+							actionListener="#{webProxyCheckController.checkProxyWorks(webProxy)}"
+							process="@this" title="#{word['checkUrlAccessTime']}"
+							update=":main:webProxyTable">
+
+						</p:commandButton>
+					</p:column>
+					<p:column headerText="#{word['urlAccessTime']}"
+						filterBy="#{webProxy.urlAccessTime}" filterable="false"
+						sortBy="#{webProxy.urlAccessTime}" filterMatchMode="contains">
+						<h:outputText rendered="#{null != webProxy.urlAccessTime}"
+							value="#{webProxy.urlAccessTime} ms" />
+					</p:column>
+
+
+					<f:facet name="footer">
+       #{word['inTotal']} #{webProxyCheckController.webProxyList.size()} #{word['proxy']}.
+    </f:facet>
+				</p:dataTable>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

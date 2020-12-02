@@ -1,0 +1,253 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<ui:define name="breadcrumb">
+		<li>/</li>
+		<li>#{word['editRole']}</li>
+	</ui:define>
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{editRoleController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+    	#{word['editRole']}
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="card">
+					<h:form id="main">
+						<p:growl id="grwl" showDetail="false" closable="true" />
+
+						<p:panel style="margin-bottom:10px; background-color:lightblue">
+
+							<p:outputLabel for="newRoleName" value="#{word['roleName']}"/><br/>
+							<p:inputText id="newRoleName"  value="#{editRoleController.newRoleName}" required="true" requiredMessage="#{word['roleNameRequired']}"/>
+
+						</p:panel>
+
+						<p:panel>
+							<!--USER MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['userManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="userMngnmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleUserManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleUserManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--ROLE MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['roleManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="roleMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleRoleManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleRoleManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--NOTIFICATION MANAGEMENT  -->
+
+							<p:outputLabel for="@next" value="#{word['notificationManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="notificationMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleNotificationManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleNotificationManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--LOG MANAGEMENT  -->
+							<p:outputLabel for="@next" value="#{word['logManagementPerms']}" />
+
+							<p:selectManyCheckbox id="logMngementPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleLogManagement()]}">
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleLogManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SUPPORT MANAGEMENT  -->
+
+							<p:outputLabel for="@next" value="#{word['supportManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="supportMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSupportManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSupportManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM LOG MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemLogManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemLogMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemLogManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemLogManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM SETTINGS MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemSettiingsManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemSettingsMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemSettingsManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemSettingsManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM EMAIL MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemEmailManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemEmailMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemEmailManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemEmailManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM PROXY LIST MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemProxyListManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemProxyListMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemProxyListManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemProxyListManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM PROXY GROUP MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemProxyGroupManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemProxyGroupMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemProxyGroupManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemProxyGroupManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM PROXY CHECK MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemProxyCheckManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemProxyCheckMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemProxyCheckManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemProxyCheckManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM USER AGENT MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemUserAgentManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemUserAgentMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemUserAgentManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemUserAgentManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM DB MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemDBManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemDBMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemDBManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemDBManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM PERFORMANCE MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemPerformanceManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemPerformanceMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemPerformanceManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemPerformanceManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM PERFORMANCE CPU MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemPerformanceCPUManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemPerformanceCPUMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemPerformanceCPUManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemPerformanceCPUManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM PERFORMANCE MEMORY MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemPerformanceMemoryManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemPerformanceMemoryMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemPerformanceMemoryManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemPerformanceMemoryManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM PERFORMANCE DISC MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemPerformanceDiscManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemPerformanceDiscMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemPerformanceDiscManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemPerformanceDiscManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel>
+							<!--SYSTEM DOCUMENTATION MANAGEMENT -->
+
+							<p:outputLabel for="@next" value="#{word['systemDocumentationManagementPerms']}" style="margin-right:10px"/>
+							<p:selectManyCheckbox id="systemDocumentationMngmentPerms" value="#{editRoleController.selectedPermissionsOfRole[rolePermissionEnumsUtils.getRoleSystemDocumentationManagement()]}" >
+								<f:selectItems value="#{rolePermissionEnumsUtils.availablePermissionsOfRoleJSF(rolePermissionEnumsUtils.getRoleSystemDocumentationManagement())}" var="permission" itemLabel="#{word[permission]}" itemValue="#{permission}" />
+
+							</p:selectManyCheckbox>
+						</p:panel>
+
+						<p:panel style="margin-bottom:10px">
+
+							<p:commandButton value="#{word['save']}" id="saveRoleBtn" action="#{editRoleController.saveRole}" update=":main" style="margin-right:20px;" icon="pi pi-save">
+
+								<p:confirm header="#{word['confirmation']}"
+									message="#{word['areYouSureSave']}" icon="ui-icon-alert" />
+							</p:commandButton>
+						</p:panel>
+					</h:form>
+
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+						responsive="true">
+						<p:commandButton value="#{word['yes']}" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="#{word['no']}" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

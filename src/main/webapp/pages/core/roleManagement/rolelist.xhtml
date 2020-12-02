@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{roleController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['roleList']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['roleList']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="card">
+					<h:form id="main">
+						<p:growl id="message" showDetail="true" />
+						<p:dataTable id="rolesTable" var="role" rows="10" paginator="true"
+							reflow="true" widgetVar="rolesTable"
+							emptyMessage="#{word['noRecordsFound']}"
+							value="#{roleController.roles}" rowsPerPageTemplate="5,10,15,100"
+							tableStyle="table-layout: auto;">
+							<f:facet name="header">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-3 ui-lg-3">
+										<div>
+											<h:commandLink>
+												<p:graphicImage name="images/core/icon/excell.png"
+													library="serenity-layout" width="30" />
+												<p:dataExporter type="xls" target="rolesTable"
+													encoding="CP1254" fileName="rolesTable" />
+											</h:commandLink>
+
+											<h:commandLink>
+												<p:graphicImage name="images/core/icon/pdf.png"
+													library="serenity-layout" width="30" />
+												<p:dataExporter type="pdf" target="rolesTable"
+													encoding="CP1254" fileName="rolesTable" />
+											</h:commandLink>
+
+											<h:commandLink>
+												<p:graphicImage name="images/core/icon/csv.png"
+													library="serenity-layout" width="30" />
+												<p:dataExporter type="csv" target="rolesTable"
+													encoding="CP1254" fileName="rolesTable" />
+											</h:commandLink>
+
+											<h:commandLink>
+												<p:graphicImage name="images/core/icon/xml.png"
+													library="serenity-layout" width="30" />
+												<p:dataExporter type="xml" target="rolesTable"
+													encoding="CP1254" fileName="rolesTable" />
+											</h:commandLink>
+										</div>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<h:outputText value="#{word['listOfRoles']}"
+											style="font-size: 18px;
+									  font-weight: bold;" />
+									</div>
+									<div class="ui-g-12 ui-md-3 ui-lg-3">
+										<p:outputPanel>
+											<p:inputText value="#{roleController.searchKeyword}"
+												styleClass="changeplaceholder" id="globalFilter"
+												onkeypress="if (event.keyCode == 13) { return false; }"
+												onkeyup="PF('rolesTable').filter()" style="width:150px"
+												placeholder="#{word['search']}" />
+										</p:outputPanel>
+									</div>
+								</div>
+							</f:facet>
+							<p:column headerText="#{word['roleName']}"
+								filterBy="#{role.name}" filterable="false" sortBy="#{role.name}"
+								filterMatchMode="contains">
+								<p:commandButton value="#{word['setAsDefault']}"
+									id="changeDefaultRoleBtn" update="main" 
+									action="#{roleController.changeDefaultRole(role)}" 
+									style="margin-right:10px;" styleClass="ui-priority-primary" />
+								<h:outputText value="#{role.name}"/>
+
+							</p:column>
+							<p:column headerText="#{word['roleTypes']}"
+								filterBy="#{role.name}" filterable="false" sortBy="#{role.name}"
+								filterMatchMode="contains">
+								<h:outputText value="#{role.retrieveRoleTypesAsString()}" />
+								<p:splitButton value="#{word['actions']}" id="detailsBtn"
+									action="#{roleController.setSelectedDetailsRole(role)}"
+									update="main" onclick="PF('rolesDetailsDialogWidget').show()"
+									style="float:right" styleClass="ui-priority-primary">
+									<p:menuitem value="#{word['editRole']}" id="editRoleBtn"
+										update="main" action="#{roleController.editRole(role)}"
+										styleClass="ui-priority-primary" />
+									<p:menuitem value="#{word['deleteRole']}" id="deleteRoleBtn"
+										update="main" action="#{roleController.deleteRole(role)}"
+										styleClass="ui-priority-primary" />
+								</p:splitButton>
+
+							</p:column>
+							<f:facet name="footer">
+						       #{word['inTotal']} #{roleController.roles.size()} #{word['role']}.
+						    </f:facet>
+						</p:dataTable>
+					</h:form>
+
+					<p:dialog id="rolesDetailsDialog"
+						widgetVar="rolesDetailsDialogWidget"
+						header="#{word['allAuthorities']}" modal="true" appendTo="@(body)"
+						resizable="false" draggable="false" responsive="true">
+
+						<p:outputPanel>
+							<p:panelGrid id="privilegesGrid" columns="1" reflow="true"
+								widgetVar="privilegesGridWidget"
+								tableStyle="table-layout: auto;">
+
+								<f:facet name="header">
+									#{word['allPrivileges']}
+								</f:facet>
+								<h:outputText
+									value="#{roleController.selectedDetailsRole.allPrivilegesOfRole()}"
+									rendered="null != #{roleController.selectedDetailsRole}" />
+							</p:panelGrid>
+
+						</p:outputPanel>
+					</p:dialog>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

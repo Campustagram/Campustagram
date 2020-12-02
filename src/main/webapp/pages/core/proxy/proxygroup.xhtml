@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{webProxyGroupController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+
+	<ui:define name="page-title">
+		#{word['proxyGroupList']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['proxyGroupList']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<p:messages id="messages" showDetail="false" closable="true" />
+			<div class="ui-g" style="margin-bottom: 10px;">
+				<p:commandButton value="#{word['addProxyGroup']}" icon="fa fa-eye"
+					actionListener="#{webProxyGroupController.prepareNewProxyGroup()}"
+					process="@this" update=":proxyGroupAddView"
+					title="#{word['proxyGroupAddView']}"
+					oncomplete=" PF('proxyGroupAddView').show();"
+					ignoreAutoUpdate="true" partialSubmit="true">
+				</p:commandButton>
+			</div>
+			<div id="datatable-single">
+				<p:dataTable id="webProxyGroupTable" reflow="true"
+					widgetVar="webProxyGroupTable" var="webProxyGroup" paginator="true"
+					emptyMessage="#{word['noRecordsFound']}" rows="10"
+					rowsPerPageTemplate="5,10,15,100"
+					value="#{webProxyGroupController.webProxyGroupList}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowKey="#{webProxyGroup.id}" tableStyle="table-layout: auto;">
+					<f:facet name="header">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<h:panelGroup rendered="#{coreConfig.showDatatableExport}">
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/excell.png"
+											width="30" />
+										<p:dataExporter type="xls" target="webProxyGroupTable"
+											encoding="CP1254" fileName="webProxyGroupTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/pdf.png"
+											width="30" />
+										<p:dataExporter type="pdf" target="webProxyGroupTable"
+											encoding="CP1254" fileName="webProxyGroupTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="webProxyGroupTable"
+											encoding="CP1254" fileName="webProxyGroupTable" />
+									</h:commandLink>
+
+									<h:commandLink>
+										<p:graphicImage library="core" name="img/icon/xml.png"
+											width="30" />
+										<p:dataExporter type="xml" target="webProxyGroupTable"
+											encoding="CP1254" fileName="webProxyGroupTable" />
+									</h:commandLink>
+								</h:panelGroup>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<h:outputText value="#{word['listOfProxyGroup']}"
+									style="font-size: 18px; font-weight: bold;" />
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputPanel>
+									<p:inputText id="globalFilter"
+										onkeypress="if (event.keyCode == 13) { return false; }"
+										value="#{webProxyGroupController.searchKeyword}"
+										onkeyup="PF('webProxyGroupTable').filter()"
+										style="width:150px" placeholder="#{word['search']}" />
+								</p:outputPanel>
+							</div>
+						</div>
+					</f:facet>
+					<p:column style="width:36px">
+						<p:rowToggler />
+					</p:column>
+					<p:column headerText="#{word['proxyGroupName']}"
+						filterBy="#{webProxyGroup.name}" filterable="false"
+						sortBy="#{webProxyGroup.name}" filterMatchMode="contains">
+						<h:outputText value="#{webProxyGroup.name}" />
+					</p:column>
+					<p:column headerText="#{word['active']}"
+						filterBy="#{webProxyGroup.active}" filterable="false"
+						sortBy="#{webProxyGroup.active}" filterMatchMode="contains">
+						<h:outputText value="#{webProxyGroup.active}" />
+					</p:column>
+
+					<p:column exportable="false">
+						<f:facet name="header">#{word['action']}</f:facet>
+
+						<p:splitButton value="#{word['view']}" icon="fa fa-eye"
+							ignoreAutoUpdate="true"
+							actionListener="#{webProxyGroupController.setTmpWebProxyGroup(webProxyGroup)}"
+							update=":main:proxyGroupQuickView" title="#{word['view']}"
+							oncomplete=" PF('proxyGroupQuickView').show();" process="@this"
+							styleClass="#{user.active?'btn-primary':'btn-danger'} userlist">
+							<p:menuitem icon="fa fa-pencil-square-o"
+								value="#{word['deleteProxyGroup']}"
+								action="#{webProxyGroupController.deleteWebProxyGroup(webProxyGroup)}"
+								update="main" style="border-radius: 0;" />
+							<p:menuitem rendered="#{!webProxyGroup.active}"
+								icon="fa fa-pencil-square-o" value="#{word['setActive']}"
+								action="#{webProxyGroupController.setActiveWebProxyGroup(webProxyGroup)}"
+								update="main" style="border-radius: 0;" />
+							<p:menuitem rendered="#{webProxyGroup.active}"
+								icon="fa fa-pencil-square-o" value="#{word['setPassive']}"
+								action="#{webProxyGroupController.setPassiveProxyGroup(webProxyGroup)}"
+								update="main" style="border-radius: 0;" />
+							<p:menuitem icon="fa fa-pencil-square-o"
+								value="#{word['editProxyGroup']}"
+								action="#{webProxyGroupController.setTmpWebProxyGroup(webProxyGroup)}"
+								process="@this" update=":proxyGroupAddView"
+								title="#{word['editProxy']}" style="border-radius: 0;"
+								oncomplete=" PF('proxyGroupAddView').show();"
+								ignoreAutoUpdate="true" partialSubmit="true" />
+						</p:splitButton>
+					</p:column>
+					<p:rowExpansion>
+						<p>Proxy List</p>
+						<p:repeat var="webProxy" value="#{webProxyGroup.webProxyList}">
+							<p>
+								#{webProxy.host}:#{webProxy.port}
+								<p:commandLink update=":main"
+									actionListener="#{webProxyGroupController.deleteWebProxyFromGroup(webProxy)}">#{word['deleteFromGroup']}</p:commandLink>
+							</p>
+						</p:repeat>
+					</p:rowExpansion>
+					<f:facet name="footer">
+       #{word['inTotal']} #{webProxyGroupController.webProxyGroupList.size()} #{word['proxyGroup']}.
+    </f:facet>
+				</p:dataTable>
+				<p:dialog id="proxyGroupQuickView"
+					header="#{word['proxyGroupQuickView']}" responsive="true"
+					widgetVar="proxyGroupQuickView" modal="true" draggable="false"
+					closable="true" resizable="false" showHeader="false"
+					appendTo="@(body)">
+					<div class="ui-g-12">
+						<div class="ui-g-12">
+							<h5>#{webProxyGroupController.tmpWebProxyGroup.name}</h5>
+						</div>
+					</div>
+				</p:dialog>
+
+			</div>
+		</h:form>
+		<p:dialog id="proxyGroupAddView" header="#{word['proxyGroupAddView']}"
+			responsive="true" widgetVar="proxyGroupAddView" modal="true"
+			draggable="false" closable="true" resizable="false"
+			showHeader="false" appendTo="@(body)">
+			<h:form>
+				<div class="ui-g-12">
+
+
+					<div class="ui-sm-12">
+						<div class="ui-material">
+							<p:inputText id="groupName" required="true"
+								value="#{webProxyGroupController.tmpWebProxyGroup.name}"
+								placeholder="#{word['groupName']}" />
+							<p:outputLabel for="groupName" value="#{word['groupName']}" />
+							<p:message for="groupName" />
+						</div>
+					</div>
+					<br />
+					<div class="ui-sm-12">
+						<p:commandButton styleClass="btn-primary" value="#{word['save']}"
+							actionListener="#{webProxyGroupController.addWebProxyGroup()}"
+							update=":main" process="@form"
+							oncomplete=" PF('proxyGroupAddView').hide();"
+							partialSubmit="true" />
+					</div>
+
+
+				</div>
+			</h:form>
+		</p:dialog>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+			responsive="true">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

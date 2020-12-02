@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="en">
+<f:view locale="#{localeController.locale}">
+	<h:head>
+		<ui:insert name="page-start" />
+		<title><ui:insert name="page-title">Spring + JSF</ui:insert> |
+			#{coreConfig.SYSTEM_NAME}</title>
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<ui:insert name="head" />
+		<h:outputStylesheet library="landing"
+			name="vendor/bootstrap/css/bootstrap.min.css" />
+		<h:outputStylesheet library="landing"
+			name="vendor/fontawesome-free/css/all.min.css" />
+
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
+			rel="stylesheet" type="text/css" />
+		<link href='https://fonts.googleapis.com/css?family=Kaushan+Script'
+			rel='stylesheet' type='text/css' />
+		<link
+			href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic'
+			rel='stylesheet' type='text/css' />
+		<link
+			href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700'
+			rel='stylesheet' type='text/css' />
+		<h:outputStylesheet library="landing" name="css/agency.min.css" />
+		<h:outputStylesheet library="landing" name="css/custom.css" />
+		<ui:insert name="head-end" />
+		<script type="">
+$('link[href="/javax.faces.resource/theme.css.jsf?ln=primefaces-aristo"]').remove();
+	</script>
+	</h:head>
+
+
+	<style>
+.fixed-top {
+	top: 24px;
+}
+</style>
+	<h:body id="page-top">
+
+		<ui:insert name="top-menu" />
+		<ui:insert name="body" />
+		<ui:insert name="footer" />
+
+
+		<h:outputScript library="landing" name="vendor/jquery/jquery.min.js"
+			target="head" />
+		<h:outputScript library="landing"
+			name="vendor/bootstrap/js/bootstrap.bundle.min.js" target="head" />
+		<h:outputScript library="landing"
+			name="vendor/jquery-easing/jquery.easing.min.js" target="head" />
+		<h:outputScript library="landing" name="js/jqBootstrapValidation.js"
+			target="head" />
+		<h:outputScript library="landing" name="js/contact_me.js"
+			target="head" />
+		<h:outputScript library="landing" name="js/agency.min.js"
+			target="head" />
+	</h:body>
+</f:view>
+</html>

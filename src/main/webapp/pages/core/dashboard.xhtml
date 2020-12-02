@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+    #{word['dashboard']}
+  </ui:define>
+
+	<ui:define name="breadCrumbs">
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+		<script src="https://d3js.org/d3.v5.js"></script>
+
+		<h:outputStylesheet library="core" name="css/c3.min.css" />
+		<h:outputScript library="core" name="js/c3.min.js" target="head" />
+
+		<!--		<h:outputStylesheet library="core" name="chart/c3.css" />
+		<h:outputScript library="core" name="chart/c3.min.js" target="head" />-->
+	</ui:define>
+
+  <ui:define name="title">
+  </ui:define>
+
+	<ui:define name="body">
+		<h:form id="main">
+			<sec:authorize
+				access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_VIEW')">
+				<h:panelGroup>
+					<div class="row">
+						<div class="col-md-3 col-sm-6 col-xs-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-aqua"><i
+									class="fas fa-server" aria-hidden="true"></i></span>
+								<div class="info-box-content">
+									<span class="info-box-text">#{word['totalUsers']}</span> <span
+										class="info-box-number">#{dashboardController.totalUsers}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 col-xs-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-aqua"><i
+									class="fas fa-heart" aria-hidden="true"></i></span>
+								<div class="info-box-content">
+									<span class="info-box-text">#{word['activeUserCount']}</span> <span
+										class="info-box-number">#{dashboardController.onlineUsers}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</sec:authorize>
+		</h:form>
+
+		<h:outputScript library="core" name="js/main.min.js" target="head" />
+	</ui:define>
+</ui:composition>

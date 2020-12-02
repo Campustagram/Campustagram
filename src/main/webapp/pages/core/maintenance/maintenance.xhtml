@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/error_template.xhtml">
+
+	<ui:define name="metadata">
+		<f:viewAction type="preRenderView"
+			action="#{maintenanceController.startupChecks()}" onPostBack="true" />
+	</ui:define>
+
+	<ui:define name="page-title">
+		#{word['weAreinMaintenance']}
+	</ui:define>
+
+	<ui:define name="before-head">
+
+	</ui:define>
+
+	<ui:define name="site-title">
+#{coreConfig.SYSTEM_NAME}
+	</ui:define>
+
+	<ui:define name="message">
+
+	</ui:define>
+
+	<ui:define name="message-big">
+		<h:panelGroup rendered="#{!server.systemProperties.isEndDateActive()}">
+			<span id="maintenanceStatus" class="maintenanceText">#{word['weWillInMaintenance']}
+			</span>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{server.systemProperties.isEndDateActive()}">
+			<span id="maintenanceStatus" class="maintenanceText">#{word['weAreinMaintenance']}
+			</span>
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="time-countdown">
+		<div id="time_countdown" class="time-count-container">
+
+			<div class="col-sm-3">
+				<div class="time-box">
+					<div class="time-box-inner dash days_dash animated"
+						data-animation="rollIn" data-animation-delay="300">
+						<span class="time-number"> <span class="digit">0</span> <span
+							class="digit">0</span> <span class="digit">0</span>
+						</span> <span class="time-name">#{word['days']}</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-3">
+				<div class="time-box">
+					<div class="time-box-inner dash hours_dash animated"
+						data-animation="rollIn" data-animation-delay="600">
+						<span class="time-number"> <span class="digit">0</span> <span
+							class="digit">0</span>
+						</span> <span class="time-name">#{word['hours']}</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-3">
+				<div class="time-box">
+					<div class="time-box-inner dash minutes_dash animated"
+						data-animation="rollIn" data-animation-delay="900">
+						<span class="time-number"> <span class="digit">0</span> <span
+							class="digit">0</span>
+						</span> <span class="time-name">#{word['minutes']}</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-3">
+				<div class="time-box">
+					<div class="time-box-inner dash seconds_dash animated"
+						data-animation="rollIn" data-animation-delay="1200">
+						<span class="time-number"> <span class="digit">0</span> <span
+							class="digit">0</span>
+						</span> <span class="time-name">#{word['seconds']}</span>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- /.time-count-container -->
+	</ui:define>
+
+	<ui:define name="home-button">
+		<h:panelGroup
+			rendered="#{server.systemProperties.onMaintenance != true}">
+			<a href="#{navigationUtils.buildHrefString('/')}"> <span>#{word['goDashboard']}</span></a>
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="body-end">
+
+		<h:outputScript library="core" name="js/main.min.js" target="head" />
+
+<!-- 		<h:outputScript library="core" name="js/plugins.js" target="head" /> -->
+
+		<script type="text/javascript">
+			var dateNow = new Date();
+			var dateFuture = ${server.systemProperties.getMaintenanceDate().getTime()};
+			//dateFuture.setHours(dateFuture.getHours() + 4);
+			//dateFuture.setSeconds(dateFuture.getSeconds()+6);
+
+
+			var seconds = Math.floor((dateFuture - (dateNow))/1000);
+			var minutes = Math.floor(seconds/60);
+			var hours = Math.floor(minutes/60);
+			var days = Math.floor(hours/24);
+
+			hours = hours-(days*24);
+			minutes = minutes-(days*24*60)-(hours*60);
+			seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+						
+			$('#time_countdown').countDown({
+        
+	        // targetDate: {
+	        //     'day': 30,
+	        //     'month': 9,
+	        //     'year': 2015,
+	        //     'hour': 0,
+	        //     'min': 0,
+	        //     'sec': 0
+	        // },
+	        // omitWeeks: true
+
+
+
+	         targetOffset: {
+	            'day':      days,
+	            'month':    0,
+	            'year':     0,
+	            'hour':     hours,
+	            'min':      minutes,
+	            'sec':      seconds
+			},
+			omitWeeks: true
+	    	});
+
+			var x = setInterval(function() {
+			 var now = new Date().getTime();
+			 if(Math.floor(#{server.systemProperties.maintenanceStartDate.getTime()} /1000) == Math.floor(now/1000)){
+				 location.reload();
+				}	
+				 if(Math.floor(#{server.systemProperties.maintenanceEndDate.getTime()} /1000)	 == Math.floor(now/1000)){
+				  location.reload();
+				}	
+			}, 1000);
+		</script>
+	</ui:define>
+
+</ui:composition>

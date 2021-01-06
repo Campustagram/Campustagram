@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{searchController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['profilePage']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['profilePage']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<style type="text/css">
+.logo {
+	width: 5%
+}
+
+.detail {
+	width: 95%;
+	padding-left: 25px;
+}
+
+.detail td {
+	padding-right: 41px;
+}
+
+.ui-datascroller .ui-datascroller-item {
+	border-bottom: 1px solid #A8A8A8;
+	padding: 25px 10px;
+	background-color: white;
+	/* with the exported variables from Nova and Luna Themes*/
+	border-bottom-color: var(- -input-border-color, #A8A8A8);
+}
+</style>
+		<h:form>
+			<h:panelGrid columns="2" cellpadding="25">
+				<p:inputText id="key" value="#{searchController.key}" />
+				<p:commandButton value="#{word['search']}" update="results"
+					action="#{searchController.findUsers()}" styleClass="btn-success" style="margin: 10px;" />
+			</h:panelGrid>
+			<h:panelGroup id="results">
+				<p:dataScroller value="#{searchController.users}" var="user"
+					chunkSize="10">
+
+					<h:panelGrid columns="2" style="width:100%"
+						columnClasses="logo,detail">
+						<h:commandLink
+							action="#{searchController.goToUserProfilePage(user)}">
+							<p:graphicImage library="app"
+								style=" height: 50px;
+									width: 50px;
+									border-radius: 50%;"
+								name="#{user.profileImageURL}" />
+						</h:commandLink>
+
+						<p:outputPanel>
+							<h:panelGrid columns="2" cellpadding="5">
+								<h:outputText value="#{word['name']}" style="font-weight: bold" />
+								<h:outputText value="#{user.name}" />
+
+								<h:outputText value="#{word['surname']}"
+									style="font-weight: bold" />
+								<h:outputText value="#{user.lastname}" />
+
+								<h:outputText value="#{word['email']}" style="font-weight: bold" />
+								<h:outputText value="#{user.email}" />
+							</h:panelGrid>
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:dataScroller>
+				<h:outputText value="#{word['thereWereNoResults']}"
+					rendered="#{ empty searchController.users}"
+					style="font-weight: bold; " />
+			</h:panelGroup>
+		</h:form>
+	</ui:define>
+</ui:composition>

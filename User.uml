@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.campustagram.core.model.User</OriginalElement>
+  <nodes>
+    <node x="166.27174319727897" y="0.0">javax.persistence.Entity</node>
+    <node x="768.16875" y="1656.0">com.campustagram.core.model.MailSenderProperties</node>
+    <node x="280.21875000000006" y="171.0">com.campustagram.core.model.ErrorLog</node>
+    <node x="445.96875000000006" y="870.0">com.campustagram.core.model.User</node>
+    <node x="714.21875" y="500.0">com.campustagram.core.model.Log</node>
+    <node x="762.4449149659865" y="0.0">java.io.Serializable</node>
+    <node x="456.21875000000006" y="182.0">com.campustagram.core.model.EmailTemplate</node>
+    <node x="551.6050510204082" y="0.0">javax.persistence.Table</node>
+    <node x="37.21875" y="160.0">com.campustagram.app.model.Image</node>
+    <node x="883.21875" y="260.0">org.springframework.security.core.userdetails.UserDetails</node>
+    <node x="474.30208333333337" y="1689.0">com.campustagram.core.model.Email</node>
+    <node x="501.1288860544218" y="544.0">com.campustagram.core.model.Language</node>
+    <node x="11.15625" y="555.0">com.campustagram.app.model.LikedImage</node>
+    <node x="808.16875" y="1223.0">javax.persistence.Embeddable</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.campustagram.core.model.Language" target="com.campustagram.core.model.User">
+      <point x="18.625" y="71.0" />
+      <point x="594.2538860544219" y="850.0" />
+      <point x="601.79375" y="850.0" />
+      <point x="20.324999999999932" y="-368.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Language" target="javax.persistence.Table">
+      <point x="0.0" y="-71.0" />
+      <point x="575.6288860544219" y="480.0" />
+      <point x="618.71875" y="480.0" />
+      <point x="618.71875" y="110.0" />
+      <point x="602.9383843537416" y="110.0" />
+      <point x="7.333333333333371" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.ErrorLog" target="javax.persistence.Entity">
+      <point x="-52.0" y="-104.0" />
+      <point x="306.21875000000006" y="60.0" />
+      <point x="241.7003146258504" y="60.0" />
+      <point x="27.428571428571445" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.Image" target="com.campustagram.app.model.LikedImage">
+      <point x="-39.5625" y="115.0" />
+      <point x="103.15625" y="480.0" />
+      <point x="125.95624999999995" y="480.0" />
+      <point x="32.799999999999955" y="-60.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Log" target="javax.persistence.Entity">
+      <point x="-49.33333333333337" y="-115.0" />
+      <point x="738.8854166666667" y="410.0" />
+      <point x="269.71875000000006" y="410.0" />
+      <point x="269.71875000000006" y="70.0" />
+      <point x="227.98602891156474" y="70.0" />
+      <point x="13.71428571428578" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="org.springframework.security.core.userdetails.UserDetails">
+      <point x="128.72500000000002" y="-368.0" />
+      <point x="710.1937500000001" y="850.0" />
+      <point x="951.21875" y="850.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.Image" target="javax.persistence.Table">
+      <point x="0.0" y="-115.0" />
+      <point x="142.71875" y="90.0" />
+      <point x="558.9383843537416" y="90.0" />
+      <point x="-36.66666666666663" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.Image" target="com.campustagram.core.model.User">
+      <point x="92.3125" y="115.0" />
+      <point x="235.03125" y="430.0" />
+      <point x="258.81991496598647" y="430.0" />
+      <point x="258.81991496598647" y="770.0" />
+      <point x="561.14375" y="770.0" />
+      <point x="-20.325000000000045" y="-368.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.LikedImage" target="javax.persistence.Entity">
+      <point x="-65.60000000000002" y="-60.0" />
+      <point x="27.556249999999977" y="480.0" />
+      <point x="11.0" y="480.0" />
+      <point x="11.0" y="70.0" />
+      <point x="186.84317176870752" y="70.0" />
+      <point x="-27.428571428571445" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="com.campustagram.app.model.LikedImage">
+      <point x="-115.17500000000007" y="-368.0" />
+      <point x="466.29375" y="840.0" />
+      <point x="31.65625" y="840.0" />
+      <point x="-61.5" y="60.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Language" target="java.io.Serializable">
+      <point x="49.66666666666663" y="-71.0" />
+      <point x="625.2955527210884" y="480.0" />
+      <point x="824.96875" y="480.0" />
+      <point x="-9.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.MailSenderProperties" target="javax.persistence.Embeddable">
+      <point x="0.0" y="-104.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.EmailTemplate" target="javax.persistence.Table">
+      <point x="0.0" y="-93.0" />
+      <point x="532.21875" y="110.0" />
+      <point x="588.2717176870749" y="110.0" />
+      <point x="-7.333333333333371" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="javax.persistence.Table">
+      <point x="47.424999999999955" y="-368.0" />
+      <point x="628.89375" y="790.0" />
+      <point x="703.71875" y="790.0" />
+      <point x="703.71875" y="100.0" />
+      <point x="617.6050510204082" y="100.0" />
+      <point x="22.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.Image" target="java.io.Serializable">
+      <point x="70.33333333333326" y="-115.0" />
+      <point x="213.05208333333326" y="120.0" />
+      <point x="771.4449149659865" y="120.0" />
+      <point x="-63.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Log" target="com.campustagram.core.model.User">
+      <point x="18.5" y="115.0" />
+      <point x="806.71875" y="820.0" />
+      <point x="669.54375" y="820.0" />
+      <point x="88.07499999999993" y="-368.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.EmailTemplate" target="java.io.Serializable">
+      <point x="50.666666666666686" y="-93.0" />
+      <point x="582.8854166666667" y="140.0" />
+      <point x="807.4449149659865" y="140.0" />
+      <point x="-27.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="java.io.Serializable">
+      <point x="115.17499999999995" y="-368.0" />
+      <point x="696.64375" y="840.0" />
+      <point x="872.71875" y="840.0" />
+      <point x="872.71875" y="140.0" />
+      <point x="861.4449149659865" y="140.0" />
+      <point x="27.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="com.campustagram.core.model.Log">
+      <point x="60.97500000000002" y="-368.0" />
+      <point x="642.4437500000001" y="800.0" />
+      <point x="732.71875" y="800.0" />
+      <point x="-55.5" y="115.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Log" target="javax.persistence.Table">
+      <point x="0.0" y="-115.0" />
+      <point x="788.21875" y="90.0" />
+      <point x="632.2717176870749" y="90.0" />
+      <point x="36.66666666666663" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Email" target="com.campustagram.core.model.User">
+      <point x="-31.0" y="-71.0" />
+      <point x="505.30208333333337" y="1631.0" />
+      <point x="491.1354166666667" y="1631.0" />
+      <point x="-90.33333333333337" y="368.0" />
+    </edge>
+    <edge source="org.springframework.security.core.userdetails.UserDetails" target="java.io.Serializable">
+      <point x="0.0" y="-15.0" />
+      <point x="951.21875" y="140.0" />
+      <point x="879.4449149659865" y="140.0" />
+      <point x="45.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="javax.persistence.Entity">
+      <point x="-128.72500000000014" y="-368.0" />
+      <point x="452.7437499999999" y="850.0" />
+      <point x="0.0" y="850.0" />
+      <point x="0.0" y="60.0" />
+      <point x="173.12888605442186" y="60.0" />
+      <point x="-41.14285714285711" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.MailSenderProperties" target="com.campustagram.core.model.User">
+      <point x="-69.33333333333331" y="-104.0" />
+      <point x="802.8354166666668" y="1631.0" />
+      <point x="671.8020833333335" y="1631.0" />
+      <point x="90.33333333333337" y="368.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Language" target="javax.persistence.Entity">
+      <point x="-49.66666666666663" y="-71.0" />
+      <point x="525.9622193877551" y="420.0" />
+      <point x="258.71875000000006" y="420.0" />
+      <point x="258.71875000000006" y="80.0" />
+      <point x="214.27174319727897" y="80.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.ErrorLog" target="javax.persistence.Table">
+      <point x="0.0" y="-104.0" />
+      <point x="358.21875000000006" y="100.0" />
+      <point x="573.6050510204082" y="100.0" />
+      <point x="-22.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.LikedImage" target="com.campustagram.app.model.Image">
+      <point x="-32.799999999999955" y="-60.0" />
+      <point x="60.356250000000045" y="480.0" />
+      <point x="50.40625" y="480.0" />
+      <point x="-92.3125" y="115.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.MailSenderProperties" target="java.io.Serializable">
+      <point x="69.33333333333331" y="-104.0" />
+      <point x="941.5020833333333" y="1631.0" />
+      <point x="1054.7341411564626" y="1631.0" />
+      <point x="1054.7341411564626" y="130.0" />
+      <point x="897.4449149659865" y="130.0" />
+      <point x="63.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.Log" target="java.io.Serializable">
+      <point x="49.33333333333337" y="-115.0" />
+      <point x="837.5520833333335" y="480.0" />
+      <point x="835.96875" y="480.0" />
+      <point x="835.96875" y="140.0" />
+      <point x="843.4449149659865" y="140.0" />
+      <point x="9.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.ErrorLog" target="java.io.Serializable">
+      <point x="52.0" y="-104.0" />
+      <point x="410.21875000000006" y="130.0" />
+      <point x="789.4449149659865" y="130.0" />
+      <point x="-45.0" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="com.campustagram.core.model.Language">
+      <point x="-6.774999999999977" y="-368.0" />
+      <point x="574.6937500000001" y="760.0" />
+      <point x="519.7538860544219" y="760.0" />
+      <point x="-55.875" y="71.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.LikedImage" target="com.campustagram.core.model.User">
+      <point x="20.5" y="60.0" />
+      <point x="113.65625" y="820.0" />
+      <point x="493.3937499999999" y="820.0" />
+      <point x="-88.07500000000016" y="-368.0" />
+    </edge>
+    <edge source="com.campustagram.app.model.Image" target="javax.persistence.Entity">
+      <point x="-70.33333333333326" y="-115.0" />
+      <point x="72.38541666666674" y="80.0" />
+      <point x="200.5574574829933" y="80.0" />
+      <point x="-13.714285714285666" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.EmailTemplate" target="javax.persistence.Entity">
+      <point x="-50.666666666666686" y="-93.0" />
+      <point x="481.55208333333337" y="50.0" />
+      <point x="255.41460034013608" y="50.0" />
+      <point x="41.14285714285711" y="15.0" />
+    </edge>
+    <edge source="com.campustagram.core.model.User" target="com.campustagram.app.model.Image">
+      <point x="-33.875000000000114" y="-368.0" />
+      <point x="547.59375" y="780.0" />
+      <point x="247.81991496598647" y="780.0" />
+      <point x="247.81991496598647" y="440.0" />
+      <point x="208.65625" y="440.0" />
+      <point x="65.9375" y="115.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.9539930555555556" x="566.0" y="548.1555959963603" />
+  <SelectedNodes>
+    <node>com.campustagram.core.model.User</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

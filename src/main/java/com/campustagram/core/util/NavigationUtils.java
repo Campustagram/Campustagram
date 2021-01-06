@@ -60,7 +60,12 @@ public class NavigationUtils {
 		urlsAndPaths.put("/demoform", "/pages/core/demo/demoform.xhtml");
 		urlsAndPaths.put("/index", "/pages/landing/index.xhtml");
 		urlsAndPaths.put("/403", "/pages/core/errorpage/403.xhtml");
-	
+		
+		
+		urlsAndPaths.put("/mainpage", "/pages/app/mainpage.xhtml");
+		urlsAndPaths.put("/profilepage", "/pages/app/profilepage.xhtml");
+		urlsAndPaths.put("/search", "/pages/app/search.xhtml");
+		
 	}
 
 	public NavigationUtils() {

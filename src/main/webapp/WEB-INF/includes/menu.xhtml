@@ -55,14 +55,27 @@
 			</h:panelGroup>
 		</sec:authorize>
 
-		<h:panelGroup>
-			<li><p:link
-					outcome="#{navigationUtils.buildOutcomeString('/mainpage')}">
-					<i class="fa fa-file-text" aria-hidden="true" />
-					<span>#{word['mainPage']}</span>
-				</p:link></li>
-		</h:panelGroup>
-
+		<sec:authorize access="isAuthenticated()">
+			<h:panelGroup>
+				<ui:remove>
+					<li><p:link
+							outcome="#{navigationUtils.buildOutcomeString('/mainpage')}">
+							<i class="fa fa-file-text" aria-hidden="true" />
+							<span>#{word['mainPage']}</span>
+						</p:link></li>
+				</ui:remove>
+				<li><p:link
+						outcome="#{navigationUtils.buildOutcomeString('/profilepage')}">
+						<i class="fa fa-file-text" aria-hidden="true" />
+						<span>#{word['profilePage']}</span>
+					</p:link></li>
+				<li><p:link
+						outcome="#{navigationUtils.buildOutcomeString('/search')}">
+						<i class="fa fa-file-text" aria-hidden="true" />
+						<span>#{word['search']}</span>
+					</p:link></li>
+			</h:panelGroup>
+		</sec:authorize>
 		<sec:authorize
 			access="hasAuthority('ROLE_USER_MANAGEMENT-PERMISSION_VIEW')">
 			<h:panelGroup>

@@ -68,7 +68,11 @@ public class TicketController {
 
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "refreshData", null, CommonConstants.END);
 	}
-
+	
+	/**
+	 * sayfa ilk açıldığında çalışır
+	 * ilklendirmeleri yapar
+	 */
 	public void startUpChecks() {
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "startUpChecks", null, CommonConstants.START);
 		searchKeyword = "";
@@ -80,6 +84,15 @@ public class TicketController {
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "startUpChecks", null, CommonConstants.END);
 	}
 
+	/**
+	 * open new ticket butonuna basılınca tetiklenir.
+	 * ticket objesi oluşturur. 
+	 * gerekli field leri doldurur.
+	 * view ticket sayfasındaki variable a atamasını yapar.
+	 * view ticket sayfasına yönlendirme yapar.
+	 * 
+	 * @return
+	 */
 	public String openNewTicket() {
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "openNewTicket", null, CommonConstants.START);
 		Ticket ticket = new Ticket();

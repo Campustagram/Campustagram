@@ -26,6 +26,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.campustagram.app.model.Image;
+import com.campustagram.app.repository.ImageRepository;
 import com.campustagram.core.demo.controller.CreateLanguageDemo;
 import com.campustagram.core.demo.controller.CreateUserDemo;
 import com.campustagram.core.enums.SystemProcessType;
@@ -33,6 +35,7 @@ import com.campustagram.core.model.EmailTemplate;
 import com.campustagram.core.model.Role;
 import com.campustagram.core.model.SystemInformation;
 import com.campustagram.core.model.SystemProperties;
+import com.campustagram.core.model.User;
 import com.campustagram.core.persistence.EmailTemplateRepository;
 import com.campustagram.core.persistence.LanguageRepository;
 import com.campustagram.core.persistence.RoleRepository;
@@ -68,6 +71,8 @@ public class ApplicationMain extends SpringBootServletInitializer {
 	private SystemInformationRepository systemInformationRepository;
 	@Autowired
 	private BCryptEncoderService bCryptEncoderService;
+	@Autowired
+	private ImageRepository imageRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApplicationMain.class, args);
@@ -218,13 +223,72 @@ public class ApplicationMain extends SpringBootServletInitializer {
 			CreateUserDemo createUserDemo = new CreateUserDemo(userRepository, languageRepository,
 					bCryptEncoderService);
 
-			createUserDemo.createUser("salih@a.com", "salih emre", "kuru", systemRegulator);
 			createUserDemo.createUser("a@a.com", "a", "a", systemRegulator);
-			createUserDemo.createUser("a@systemmaintainer.com", "a", "a", systemMaintainer);
-			createUserDemo.createUser("a@regularuser.com", "a", "a", regularUser);
-			createUserDemo.createUser("a@systemregulator.com", "a", "a", systemRegulator);
-			createUserDemo.createUser("a@humanresources.com", "a", "a", humanResources);
+			
+			createUserDemo.createUser("sekuru@gtu.edu.tr", "salih emre", "kuru", systemRegulator,"img/user_profile_img/1.jpg");
+			createUserDemo.createUser("zafer.altay2016@gtu.edu.tr", "zafer", "altay", systemRegulator,"img/user_profile_img/2.jpg");
+			createUserDemo.createUser("ahmeteren.incir2016@gtu.edu.tr", "ahmet eren", "incir", systemRegulator,"img/user_profile_img/3.jpg");
+			createUserDemo.createUser("mineisik@gtu.edu.tr", "mine", "ışık", systemRegulator,"img/user_profile_img/4.jpg");
+			createUserDemo.createUser("miray.yildiz2016@gtu.edu.tr", "miray", "yıldız", systemRegulator,"img/user_profile_img/5.jpg");
 
+			
+			User user1 = userRepository.findByEmailNotDeleted("zafer.altay2016@gtu.edu.tr");
+			User user2 = userRepository.findByEmailNotDeleted("sekuru@gtu.edu.tr");
+			Image image1 = new Image();
+			image1.setImageURL("img/gtu/1.jpg");
+			image1.setUser(user1);
+			imageRepository.save(image1);
+
+			Image image2 = new Image();
+			image2.setImageURL("img/gtu/2.jpg");
+			image2.setUser(user1);
+			imageRepository.save(image2);
+
+			Image image3 = new Image();
+			image3.setImageURL("img/gtu/3.jpg");
+			image3.setUser(user1);
+			imageRepository.save(image3);
+
+			Image image4 = new Image();
+			image4.setImageURL("img/gtu/4.jpg");
+			image4.setUser(user1);
+			imageRepository.save(image4);
+
+			Image image5 = new Image();
+			image5.setImageURL("img/gtu/5.jpg");
+			image5.setUser(user1);
+			imageRepository.save(image5);
+		
+			
+			Image image6 = new Image();
+			image6.setImageURL("img/gtu/6.jpg");
+			image6.setUser(user2);
+			imageRepository.save(image6);
+
+			Image image7 = new Image();
+			image7.setImageURL("img/gtu/7.jpg");
+			image7.setUser(user2);
+			imageRepository.save(image7);
+
+			Image image8 = new Image();
+			image8.setImageURL("img/gtu/8.jpg");
+			image8.setUser(user2);
+			imageRepository.save(image8);
+
+			Image image9 = new Image();
+			image9.setImageURL("img/gtu/9.jpg");
+			image9.setUser(user2);
+			imageRepository.save(image9);
+
+			Image image10 = new Image();
+			image10.setImageURL("img/gtu/10.jpg");
+			image10.setUser(user2);
+			imageRepository.save(image10);
+			
+			Image image11 = new Image();
+			image11.setImageURL("img/gtu/11.jpg");
+			image11.setUser(user2);
+			imageRepository.save(image11);
 		};
 	}
 }

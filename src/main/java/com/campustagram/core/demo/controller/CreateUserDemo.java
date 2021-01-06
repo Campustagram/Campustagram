@@ -14,11 +14,13 @@ public class CreateUserDemo {
 	private UserRepository userRepository;
 	private LanguageRepository languageRepository;
 	private BCryptEncoderService bCryptEncoderService;
+
 	/**
 	 * 
 	 * @param roleRepository
 	 */
-	public CreateUserDemo(UserRepository userRepository , LanguageRepository languageRepository , BCryptEncoderService bCryptEncoderService) {
+	public CreateUserDemo(UserRepository userRepository, LanguageRepository languageRepository,
+			BCryptEncoderService bCryptEncoderService) {
 		this.userRepository = userRepository;
 		this.languageRepository = languageRepository;
 		this.bCryptEncoderService = bCryptEncoderService;
@@ -26,11 +28,19 @@ public class CreateUserDemo {
 
 	@Bean
 	public void createUser(String email, String name, String lastname, Role userRole) {
+		createUser(email, name, lastname, userRole, null);
+	}
+
+	@Bean
+	public void createUser(String email, String name, String lastname, Role userRole, String profileImageURL) {
 		if (null == userRepository.findByEmailNotDeleted(email)) {
 			User user = new User();
 			user.setEmail(email);
 			user.setName(name);
 			user.setLastname(lastname);
+			if (null != profileImageURL) {
+				user.setProfileImageURL(profileImageURL);
+			}
 			user.setPassword(bCryptEncoderService.encode("1"));
 			user.setBirthDate(CommonDate.currentDate());
 			user.setLastSeen(CommonDate.currentDate());

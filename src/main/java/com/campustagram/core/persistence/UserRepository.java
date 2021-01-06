@@ -47,4 +47,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("update User u set u.isOnline = :isOnline where u.id = :id and isDeleted=false")
 	@Transactional
 	int updateUserOnlineStatus(@Param("id") Long id, @Param("isOnline") boolean isOnline);
+
+	@Query(value = "SELECT * FROM users t WHERE is_deleted=false AND email LIKE '%:key%' ", nativeQuery = true)
+	public List<User> findAllByKeyNotDeleted(@Param("key") String key);
+
 }

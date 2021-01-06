@@ -28,13 +28,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.campustagram.app.model.*;
 import com.campustagram.core.common.CommonDate;
 import com.campustagram.core.security.enums.PermissionType;
 import com.campustagram.core.security.enums.RoleType;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails , Serializable {
+public class User implements UserDetails, Serializable {
 	/**
 	 * 
 	 */
@@ -56,7 +57,9 @@ public class User implements UserDetails , Serializable {
 	@Column(length = 512)
 	private String address;
 	@Column(columnDefinition = "TEXT")
-	private String profileImageURL;
+	private String profileImageURL = "img/user_profile_img/user.png";
+	@Column(columnDefinition = "TEXT")
+	private String profileImageDescription;
 	@Column(length = 12)
 
 	private Date birthDate;
@@ -78,9 +81,9 @@ public class User implements UserDetails , Serializable {
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "user")
 	private ResetPassword resetPassword;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "role_id" , nullable = false)
+	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
 
 	@OneToMany(mappedBy = "user", targetEntity = RememberMe.class, fetch = FetchType.LAZY, cascade = {
@@ -89,7 +92,7 @@ public class User implements UserDetails , Serializable {
 
 	@OneToMany(mappedBy = "user", targetEntity = Log.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Log> log = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "processUser", targetEntity = Log.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Log> processLogs = new ArrayList<>();
 
@@ -109,23 +112,42 @@ public class User implements UserDetails , Serializable {
 	@JoinColumn(name = "language_id")
 	private Language language;
 
+	/*
+	 * @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL})
+	 * 
+	 * @JoinTable(name = "users_liked", joinColumns = @JoinColumn(name = "user_id"),
+	 * inverseJoinColumns = @JoinColumn(name = "image_id")) private Set<Image>
+	 * likedPhotos = new HashSet<>();
+	 */
+	// kişinin fotoğrafları
+	@OneToMany(mappedBy = "user", targetEntity = Image.class, fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	private List<Image> images = new ArrayList<>();
+
+	// kişinin beğendiği fotoğraf
+/*	@ManyToOne(targetEntity = Image.class)
+	@JoinColumn(name = "image_id")
+	private Image likedImage;
+*/
+	@OneToMany(mappedBy = "user", targetEntity = LikedImage.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<LikedImage> likedImages ;
+	
 	public User() {
 		super();
 	}
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-		
-		for(RoleType roleType : getRole().getPrivileges().keySet()) {
-			
-			for(PermissionType permissionType : getRole().getPrivileges().get(roleType)) {
+
+		for (RoleType roleType : getRole().getPrivileges().keySet()) {
+
+			for (PermissionType permissionType : getRole().getPrivileges().get(roleType)) {
 				authorities.add(new SimpleGrantedAuthority(roleType.name() + "-" + permissionType.name()));
 			}
-			
+
 			authorities.add(new SimpleGrantedAuthority(roleType.name()));
 		}
-		
+
 		return authorities;
 	}
 
@@ -176,8 +198,7 @@ public class User implements UserDetails , Serializable {
 	}
 
 	public boolean checkOnlineStatus() {
-		if (this.isOnline
-				&& (CommonDate.computeDiffBetween2Minutes(CommonDate.currentDate(), this.lastSeen) < 5)) {
+		if (this.isOnline && (CommonDate.computeDiffBetween2Minutes(CommonDate.currentDate(), this.lastSeen) < 5)) {
 			return true;
 		}
 		return false;
@@ -399,6 +420,12 @@ public class User implements UserDetails , Serializable {
 		this.role = role;
 	}
 
+	/*
+	 * public Set<Image> getLikedPhotos() { return likedPhotos; }
+	 * 
+	 * public void setLikedPhotos(Set<Image> likedPhotos) { this.likedPhotos =
+	 * likedPhotos; }
+	 */
 	public List<Log> getProcessLogs() {
 		return processLogs;
 	}
@@ -406,4 +433,29 @@ public class User implements UserDetails , Serializable {
 	public void setProcessLogs(List<Log> processLogs) {
 		this.processLogs = processLogs;
 	}
+
+	public String getProfileImageDescription() {
+		return profileImageDescription;
+	}
+
+	public void setProfileImageDescription(String profileImageDescription) {
+		this.profileImageDescription = profileImageDescription;
+	}
+
+	public List<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
+/*
+	public Image getLikedImage() {
+		return likedImage;
+	}
+
+	public void setLikedImage(Image likedImage) {
+		this.likedImage = likedImage;
+	}
+*/
 }

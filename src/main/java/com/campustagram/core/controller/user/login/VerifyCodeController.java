@@ -66,7 +66,7 @@ public class VerifyCodeController {
 				&& (null != (rp = resetPasswordRepository
 						.findByHash(CommonCryptographicHash.encryptChar(getVerifyCodeFromTheUser().toCharArray()))))) {
 			// the entered code match
-			if (CommonDate.computeDiffBetween2Minutes(rp.getCreateDate(), CommonDate.currentDate()) > 5) {
+			if (CommonDate.computeDiffBetween2Minutes( CommonDate.currentDate(), rp.getCreateDate()) > 5) {
 				// Time past reset code.
 				server.writeLogWithUser(rp.getUser(), "resetPasswordCodeTimeOver", CommonConstants.LOG_INFO);
 				resetPasswordRepository.delete(rp);

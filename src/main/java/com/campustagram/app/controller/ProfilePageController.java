@@ -54,9 +54,7 @@ public class ProfilePageController {
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "startUpChecks", null, CommonConstants.START);
 
 		activeUser = activeUserService.fetchActiveUser();
-		if (null == userToView) {
-			userToView = activeUser;
-		}
+		userToView = activeUser;
 		images = imageRepository.findAllByUserIdNotDeleted(userToView.getId());
 
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "startUpChecks", null, CommonConstants.END);
@@ -123,10 +121,6 @@ public class ProfilePageController {
 		} else {
 			return true;
 		}
-	}
-
-	public int randomInt(Image image) {
-		return (int) (1 + (Math.random() * (99999 - 1)));
 	}
 
 	public int numberOfLikes(Image image) {

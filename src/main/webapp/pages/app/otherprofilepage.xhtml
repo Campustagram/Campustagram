@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction type="preRenderView" action="#{server.pageEntryWorks()}"
+			onPostBack="true" />
+		<f:viewAction type="preRenderView"
+			action="#{otherProfilePageController.startUpChecks()}" onPostBack="true" />
+	</f:metadata>
+
+	<ui:define name="page-title">
+		#{word['profilePage']}
+	</ui:define>
+
+	<ui:define name="breadCrumbs">
+		<li class="">#{word['profilePage']}</li>
+	</ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<style type="text/css">
+#form\:basic td, th {
+	padding: 20px;
+}
+
+#form\:images .ui-helper-clearfix {
+	padding-top: unset;
+	padding-bottom: unset;
+	text-align: left;
+}
+
+#form\:images .ui-panel-title {
+	font-size: 14px;
+}
+
+#form\:images tr:nth-child(4) td {
+	text-align: left;
+}
+
+#form\:images .ui-helper-clearfix {
+	border-top-left-radius: inherit;
+	border-top-right-radius: inherit;
+}
+</style>
+
+		<h:form id="form" enctype="multipart/form-data">
+			<div class="ui-g-12">
+				<p:messages id="messages" showDetail="false" closable="true"
+					globalOnly="true"></p:messages>
+			</div>
+			<p:panel id="basic"
+				header="#{otherProfilePageController.userToView.fullName}"
+				style="margin-bottom:20px">
+				<h:panelGrid columns="2" cellpadding="10" style="padding: 20px;">
+					<h:panelGrid columns="1" cellpadding="10"
+						style="padding: 5px; text-align: center;">
+						<p:graphicImage library="app"
+							style=" height: 100px;
+									width: 100px;
+									border-radius: 50%;"
+							name="#{otherProfilePageController.userToView.profileImageURL}" />
+					</h:panelGrid>
+					<h:outputText
+						value="The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
+                    His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
+                    Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect,
+                    but given to ruthless violence whenever anything stands against the good of the family. Demo Description. " />
+				</h:panelGrid>
+			</p:panel>
+			<p:dataGrid var="image" value="#{otherProfilePageController.images}"
+				columns="3" layout="grid" rows="12" paginator="true" id="images"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="6,12,16">
+
+				<p:panel
+					style="text-align:center;      font-size: 14px; 
+					  padding: unset; border-radius: 20px;">
+					<f:facet name="header">
+						<p:graphicImage library="app"
+							style=" height: 25px;
+									width: 25px;
+									border-radius: 50%;"
+							name="#{image.user.profileImageURL}" />
+						 #{image.user.fullName}
+                    </f:facet>
+					<h:panelGrid columns="1" style="height:260px; width:100%;">
+						<p:graphicImage library="app"
+							style="max-height: 200px; max-width: 100%;"
+							name="#{image.imageURL}" />
+						<h:outputText value="#{image.creationDate}" />
+						<h:panelGrid columns="2">
+							<p:commandLink ajax="true"
+								action="#{otherProfilePageController.clickLikeButton(image)}"
+								style="margin-right:20px;" update="form">
+								<p:graphicImage library="app" style="max-height: 15px;"
+									name="#{otherProfilePageController.likeButtonImageOfImage(image)}" />
+							</p:commandLink>
+								#{otherProfilePageController.numberOfLikes(image)}
+						</h:panelGrid>
+						<h:outputText id="description" style="text-align: left; "
+							value="#{image.imageDescription}" />
+					</h:panelGrid>
+				</p:panel>
+			</p:dataGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

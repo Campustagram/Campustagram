@@ -65,6 +65,7 @@ public class NavigationUtils {
 		urlsAndPaths.put("/mainpage", "/pages/app/mainpage.xhtml");
 		urlsAndPaths.put("/profilepage", "/pages/app/profilepage.xhtml");
 		urlsAndPaths.put("/search", "/pages/app/search.xhtml");
+		urlsAndPaths.put("/otherprofilepage", "/pages/app/otherprofilepage.xhtml");
 		
 	}
 

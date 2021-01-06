@@ -32,7 +32,7 @@ public class SearchController {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private ProfilePageController profilePageController;
+	private OtherProfilePageController otherProfilePageController;
 
 	private static final String ACTIVE_CLASS_NAME = "SearchController";
 
@@ -66,10 +66,10 @@ public class SearchController {
 	public String goToUserProfilePage(User user) {
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "goToUserProfilePage", null, CommonConstants.START);
 
-		profilePageController.setUserToView(user);
+		otherProfilePageController.setUserToView(user);
 
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "goToUserProfilePage", null, CommonConstants.END);
-		return NavigationUtils.buildRedirectionString("/profilepage");
+		return NavigationUtils.buildRedirectionString("/otherprofilepage");
 	}
 
 	public User getActiveUser() {

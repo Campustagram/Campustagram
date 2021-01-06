@@ -1,8 +1,7 @@
-package com.campustagram.core.controller;
+package com.campustagram.app.controller;
 
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -14,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.campustagram.app.controller.OtherProfilePageController;
-import com.campustagram.app.controller.ProfilePageController;
 import com.campustagram.app.model.Image;
 import com.campustagram.app.model.LikedImage;
 import com.campustagram.app.repository.ImageRepository;
@@ -25,14 +22,12 @@ import com.campustagram.core.model.User;
 import com.campustagram.core.persistence.UserRepository;
 import com.campustagram.core.security.service.ActiveUserService;
 import com.campustagram.core.service.LoggerService;
-import com.campustagram.core.util.NavigationUtils;
 
-@ManagedBean(name = "dashboardController")
+@ManagedBean(name = "otherProfilePageController")
 @Scope(value = "session")
-@Component(value = "dashboardController")
-@Join(path = "/dashboard", to = "/pages/core/dashboard.jsf")
-public class DashboardController {
-
+@Component(value = "otherProfilePageController")
+@Join(path = "/otherprofilepage", to = "/pages/app/otherprofilepage.jsf")
+public class OtherProfilePageController {
 	@Autowired
 	private LoggerService loggerService;
 	@Autowired
@@ -43,12 +38,11 @@ public class DashboardController {
 	private ImageRepository imageRepository;
 	@Autowired
 	private LikedImageRepository likedImageRepository;
-	@Autowired
-	private OtherProfilePageController otherProfilePageController;
-	
+
 	private static final String ACTIVE_CLASS_NAME = "DashboardController";
 
 	private User activeUser;
+	private User userToView = null;
 	private List<Image> images;
 	private Image selectedImage;
 
@@ -59,18 +53,13 @@ public class DashboardController {
 	public void startUpChecks() {
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "startUpChecks", null, CommonConstants.START);
 
-		images = imageRepository.findAllNotDeleted();
 		activeUser = activeUserService.fetchActiveUser();
+		if (null == userToView) {
+			userToView = activeUser;
+		}
+		images = imageRepository.findAllByUserIdNotDeleted(userToView.getId());
+
 		loggerService.writeInfo(ACTIVE_CLASS_NAME, "startUpChecks", null, CommonConstants.END);
-	}
-	
-	public String goToUserProfilePage(Image image) {
-		loggerService.writeInfo(ACTIVE_CLASS_NAME, "goToUserProfilePage", null, CommonConstants.START);
-		
-		otherProfilePageController.setUserToView(image.getUser());
-		
-		loggerService.writeInfo(ACTIVE_CLASS_NAME, "goToUserProfilePage", null, CommonConstants.END);
-		return NavigationUtils.buildRedirectionString("/otherprofilepage");
 	}
 
 	public List<Image> getImages() {
@@ -128,16 +117,12 @@ public class DashboardController {
 			return false;
 		}
 		LikedImage likedImage = likedImageRepository.findByUserIdAndImageId(activeUser.getId(), image.getId());
-		
+
 		if (null == likedImage) {
 			return false;
 		} else {
 			return true;
 		}
-	}
-
-	public int randomInt(Image image) {
-		return (int) (1 + (Math.random() * (99999 - 1)));
 	}
 
 	public int numberOfLikes(Image image) {
@@ -166,6 +151,14 @@ public class DashboardController {
 
 	public void setActiveUser(User activeUser) {
 		this.activeUser = activeUser;
+	}
+
+	public User getUserToView() {
+		return userToView;
+	}
+
+	public void setUserToView(User userToView) {
+		this.userToView = userToView;
 	}
 
 }

@@ -82,7 +82,7 @@ public class CreateNewPasswordController {
 					// and the user is not null.
 					user.setPassword(bCryptEncoderService.encode(getNewPassword()));
 					userRepository.save(user);
-					updateSecurityContextService.updateSecurityContextForPasswordChange(bCryptEncoderService.encode(user.getPassword()));
+					//updateSecurityContextService.updateSecurityContextForPasswordChange(bCryptEncoderService.encode(user.getPassword()));
 					server.writeLogWithUser(user, "theUserChangedThePassword", CommonConstants.LOG_UPDATE);
 					server.setPasswordChangedUser(user);
 					sendHTMLMailForPasswordChangedNotification(user);

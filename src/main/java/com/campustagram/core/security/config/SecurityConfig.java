@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/javax.faces.resource/**").permitAll()
 			.antMatchers("/dashboard/**").authenticated()
 
-			.antMatchers("/createnewpassword/**").authenticated()
+			.antMatchers("/createnewpassword/**").permitAll()
 			.antMatchers("/resetpassword/**").permitAll()
 			.antMatchers("/verifycode/**").permitAll()
 			.antMatchers("/proxycheck/**").hasAnyAuthority(buildPrivilegeString(RoleType.ROLE_SYSTEM_PROXY_CHECK_MANAGEMENT, PermissionType.PERMISSION_VIEW))

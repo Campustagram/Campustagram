@@ -45,9 +45,9 @@ public class CommonFunctions {
 	private static ILogger logger = new ILogger();
 	private static Random randomGenerator = new Random();
 	private static final String ACTIVE_CLASS_NAME = "CommonFunctions";
-	
-	public static <T> List<T> safeList (List<T> other) {
-	    return other == null ? Collections.emptyList() : other;
+
+	public static <T> List<T> safeList(List<T> other) {
+		return other == null ? Collections.emptyList() : other;
 	}
 
 	/**
@@ -259,7 +259,8 @@ public class CommonFunctions {
 					Thread.currentThread().interrupt();
 				} catch (Exception e2) {
 					logger.writeError(ACTIVE_CLASS_NAME, "sleepInSecond",
-							com.campustagram.core.common.CommonFunctions.getExceptionAsString(e2), CommonConstants.ERROR);
+							com.campustagram.core.common.CommonFunctions.getExceptionAsString(e2),
+							CommonConstants.ERROR);
 
 				}
 			}
@@ -355,7 +356,7 @@ public class CommonFunctions {
 	 *         if unsuccessful, it returns null.
 	 * @throws IOException
 	 */
-	
+
 	public static String uploadImage(FileUploadEvent event) throws IOException {
 		UploadedFile uploadedPhoto = event.getFile();
 		byte[] bytes = null;
@@ -415,7 +416,17 @@ public class CommonFunctions {
 	 * @return
 	 */
 	public static boolean isEmailUsableFormat(String emailInput) {
-		return Pattern.compile(CommonConstants.EMAIL_PATTERN, Pattern.CASE_INSENSITIVE).matcher(emailInput).find();
+		String lastFourChars = "";
+		if (emailInput.length() > 8) {
+			lastFourChars = emailInput.substring(emailInput.length() - 7);
+		} else {
+			return false;
+		}
+		if (lastFourChars.contains(".edu.tr")) {
+			return Pattern.compile(CommonConstants.EMAIL_PATTERN, Pattern.CASE_INSENSITIVE).matcher(emailInput).find();
+		} else {
+			return false;
+		}
 	}
 	// ====================================================================================================================
 	// EMAIL FORMATTERS END:

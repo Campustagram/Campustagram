@@ -213,7 +213,7 @@ public class ApplicationMain extends SpringBootServletInitializer {
 
 			SystemProperties systemProperties = new SystemProperties();
 			if (systemPropertiesRepository.count() < 1) {
-				systemProperties.setDefaultNewUserRole(roleRepository.findByNameNotDeleted("regularUser"));
+				systemProperties.setDefaultNewUserRole(roleRepository.findByNameNotDeleted("systemRegulator"));
 				systemPropertiesRepository.save(systemProperties);
 				System.out.println("SystemProperties oluşturuldu.");
 			} else {

@@ -41,7 +41,7 @@ public class CreateUserDemo {
 			if (null != profileImageURL) {
 				user.setProfileImageURL(profileImageURL);
 			}
-			user.setPassword(bCryptEncoderService.encode("1"));
+			user.setPassword(bCryptEncoderService.encode("123123123"));
 			user.setBirthDate(CommonDate.currentDate());
 			user.setLastSeen(CommonDate.currentDate());
 			user.setCreateDate(CommonDate.currentDate());
